@@ -18,13 +18,11 @@ Don't take our word for it: [prove it in 30 seconds](#prove-it-in-30-seconds).
 [![Deploy](https://github.com/Jamesuchechi/airgap-pdf/actions/workflows/deploy.yml/badge.svg)](https://github.com/Jamesuchechi/airgap-pdf/actions/workflows/deploy.yml)
 ![Uploads](https://img.shields.io/badge/bytes%20uploaded-0-brightgreen)
 ![Offline](https://img.shields.io/badge/works-offline-blue)
-![License](https://img.shields.io/badge/license-see%20LICENSE-lightgrey)
+![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 
 </div>
 
-> **Status: pre-alpha.** This README describes the target product. The **Status** column in the
-> [feature table](#what-you-can-do) is the source of truth for what actually ships today.
-> Legend: ✅ shipped · 🚧 in progress · 📋 planned · 🔬 research spike first.
+> **Status: v0.1.0 shipped.** Every tool marked ✅ below is implemented, tested in CI (Vitest + Playwright across Chromium, Firefox, and WebKit), and works offline.
 
 ---
 
@@ -111,31 +109,38 @@ Privacy claims are cheap. Here is how to check this one yourself.
 
 | Area | Tool | Status |
 |---|---|---|
-| **Organize** | Merge multiple PDFs | 📋 |
-| | Split by range, every N pages, by bookmark, or by blank-page separator | 📋 |
-| | Reorder pages visually (drag and drop thumbnails) | 📋 |
-| | Rotate, delete, duplicate, extract pages | 📋 |
-| | Insert blank pages; interleave two scans (odd/even) | 📋 |
-| **Convert** | Images → PDF (JPG, PNG, WebP, AVIF, HEIC where the browser can decode) | 📋 |
-| | PDF → images (PNG/JPG/WebP, chosen DPI) | 📋 |
-| | PDF → text / Markdown (text-layer PDFs) | 📋 |
-| | Scanned PDF → searchable PDF (OCR) | 🔬 |
-| **Edit and sign** | Draw / type / upload a signature and place it | 📋 |
-| | Fill AcroForms; flatten forms | 📋 |
-| | Annotate: highlight, text box, shapes, freehand, stamps | 📋 |
-| | Watermark, page numbers, headers/footers, crop, resize to a paper size | 📋 |
-| | Bates numbering (legal) | 📋 |
-| | Edit metadata | 📋 |
-| **Protect** | Password-protect / unlock (when you know the password) | 🔬 |
-| | **Redact: real removal, not black rectangles** | 🔬 |
-| | **Sanitize: strip metadata, JS, attachments, hidden layers** | 📋 |
-| **Inspect** | **X-Ray: what is this PDF leaking?** | 📋 |
-| | **Time Machine: recover earlier revisions hidden in a file** | 🔬 |
-| | **Verify Redaction: audit a PDF someone else redacted** | 🔬 |
-| **Compare** | Text diff + visual diff of two PDFs | 📋 |
-| **Optimize** | Compress (image recompression, object streams, cleanup) | 🔬 |
-| **Scan** | Phone camera → deskewed, cleaned, multi-page PDF | 📋 |
-| **Automate** | Recipes, CLI, embeddable iframe, "Open with" file handler | 📋 |
+| **Organize** | Merge multiple PDFs | ✅ |
+| | Split by range, every N pages, or custom ranges | ✅ |
+| | Reorder pages visually (drag and drop thumbnails, rotate-in-place) | ✅ |
+| | Rotate, delete, duplicate, extract pages | ✅ |
+| | Insert blank pages; interleave two scans (odd/even) | ✅ |
+| **Read & Edit** | **Document Reader & Live Editor** (zoom, search, inline text edit, blank PDF) | ✅ |
+| | Draw / type / upload a signature and place it | ✅ |
+| | Fill AcroForms; flatten forms | ✅ |
+| | Annotate: highlight, text box, freehand ink | ✅ |
+| | Watermark, page numbers, headers/footers, crop, resize to A4 / Letter | ✅ |
+| | Bates numbering (legal) | ✅ |
+| | Edit metadata | ✅ |
+| **Convert** | Images → PDF (JPG, PNG, WebP) | ✅ |
+| | PDF → images (PNG/JPEG, chosen DPI with iOS pixel cap) | ✅ |
+| | PDF → text / Markdown (text-layer PDFs) | ✅ |
+| | Scanned PDF → searchable PDF (local Tesseract.js OCR + language-pack manager) | ✅ |
+| **Protect** | Password-protect (AES-256) / unlock (when you know the password) | ✅ |
+| | **Redact: Safe (rasterize) & Precise (content-stream) + post-redaction verifier** | ✅ |
+| | **Sanitize: strip metadata, JS, attachments, hidden layers, with removal summary** | ✅ |
+| **Inspect** | **X-Ray: what is this PDF leaking?** | ✅ |
+| | **Time Machine: recover earlier revisions hidden in a file** | ✅ |
+| | **Verify Redaction: audit any PDF for black boxes over text & hidden leaks** | ✅ |
+| **Compare** | Myers text diff + perceptual visual diff overlay + PDF report export | ✅ |
+| **Optimize** | Compress (image recompression, object streams, never-make-bigger guard) | ✅ |
+| **Scan** | Phone camera → edge detection, perspective warp, filters, multi-page PDF | ✅ |
+| **Automate** | Recipes (URL-fragment JSON), `@airgap-pdf/cli`, `#/embed/<tool>`, PWA handlers | ✅ |
+
+### Screenshots
+
+| Home & Trust Telemetry | Workbench | Redact & Verify |
+|---|---|---|
+| ![Home](./docs/launch/01-home.png) | ![Workbench](./docs/launch/02-workbench.png) | ![Redact & Verify](./docs/launch/03-redact-verify.png) |
 
 ---
 

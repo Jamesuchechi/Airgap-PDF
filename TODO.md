@@ -151,7 +151,7 @@ Goal: the tools everyone needs, plus the thing nobody else has.
 - [x] **(S)** Manifest, icons (maskable), theme colors, offline fallback page.
 
 **Launch plumbing**
-- [ ] **(S)** README screenshots / GIF of the flow; fill the status column honestly.
+- [x] **(S)** README screenshots / GIF of the flow; fill the status column honestly.
 - [ ] **(S)** Tag `v0.1.0`, GitHub Release with the build manifest attached.
 
 **Exit:** merge/split/reorder/rotate/delete work on real files; Trust panel is live; build verification works; the site works offline.
