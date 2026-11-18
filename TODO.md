@@ -259,8 +259,8 @@ This is the flagship. Do not rush it, and do not ship a half-version: a bad reda
 - [x] **(M)** i18n: extract strings, ship English + 2 community-ready locales, RTL check.
 - [x] **(M)** Performance pass against budgets (ARCHITECTURE §23); Lighthouse CI.
 - [ ] **(M)** Cross-browser matrix manual pass (Chrome, Firefox, Safari, iOS Safari, Android Chrome).
-- [ ] **(S)** Publish measured limits table (from S5) to the README.
-- [ ] **(M)** Launch assets: 60-second demo video, 3-screenshot set, comparison page, a "How to verify we don't upload your files" blog post.
+- [x] **(S)** Publish measured limits table (from S5) to the README.
+- [x] **(M)** Launch assets: 60-second demo video, 3-screenshot set, comparison page, a "How to verify we don't upload your files" blog post.
 - [ ] **(S)** Launch posts (Show HN, r/selfhosted, r/privacy, Product Hunt, relevant legal/HR communities). Lead with the **verifiable privacy** and **real redaction** angles.
 - [ ] **(S)** Triage process: labels, `good first issue` list of 15+ small tools/fixes.
 

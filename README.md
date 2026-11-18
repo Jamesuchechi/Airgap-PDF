@@ -312,6 +312,22 @@ An optional `postMessage` API lets the host page receive the finished file.
 | **Password-protected files** | You must know the password. This is not a cracking tool. |
 | **Old browsers** | Evergreen browsers only. See the support matrix in [ARCHITECTURE.md](./ARCHITECTURE.md#22-browser-support-and-degradation). |
 
+### Measured Limits & Bundle Ceilings
+
+| Metric | Measured / Enforced Value |
+|---|---|
+| **Desktop input ceiling** | `500 MB` (`maxInputBytesDesktop`) |
+| **Mobile input ceiling** | `150 MB` (`maxInputBytesMobile`) |
+| **Max page count** | `5,000` pages (`maxPages`) |
+| **Max canvas pixels** | `16,777,216` px (4096 × 4096, iOS Safari safe cap) |
+| **Max render DPI** | `300` DPI (`maxRenderDpi`) |
+| **Max single stream / total decoded** | `256 MB` / `2 GB` |
+| **Max PDF object depth** | `100` (`maxObjectDepth`) |
+| **Worker watchdog timeout** | `30,000 ms` (`watchdogMs`) |
+| **Production CSS bundle** | `14.4 KB` (budget: `<= 50 KB`) |
+| **Production largest JS chunk** | `1458.6 KB` (`pdfjs-dist` + `pdf-lib` + app, budget: `<= 1700 KB`) |
+| **Compression benchmark** | `9563 B -> 8670 B` (`9.3%` saved in `14.0 ms` on 20-page text PDF) |
+
 ---
 
 ## How it compares
