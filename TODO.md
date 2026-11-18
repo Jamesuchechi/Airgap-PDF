@@ -254,10 +254,10 @@ This is the flagship. Do not rush it, and do not ship a half-version: a bad reda
 
 ### M10: Hardening and launch (weeks 13-14)
 
-- [ ] **(L)** Security review pass: fuzz the open path with malformed PDFs (timeouts, memory), review every `innerHTML`/`dangerouslySetInnerHTML` (should be zero), review limits.
-- [ ] **(M)** Accessibility audit (axe in CI + manual screen-reader pass), keyboard-only run-through of every tool.
-- [ ] **(M)** i18n: extract strings, ship English + 2 community-ready locales, RTL check.
-- [ ] **(M)** Performance pass against budgets (ARCHITECTURE §23); Lighthouse CI.
+- [x] **(L)** Security review pass: fuzz the open path with malformed PDFs (timeouts, memory), review every `innerHTML`/`dangerouslySetInnerHTML` (should be zero), review limits.
+- [x] **(M)** Accessibility audit (axe in CI + manual screen-reader pass), keyboard-only run-through of every tool.
+- [x] **(M)** i18n: extract strings, ship English + 2 community-ready locales, RTL check.
+- [x] **(M)** Performance pass against budgets (ARCHITECTURE §23); Lighthouse CI.
 - [ ] **(M)** Cross-browser matrix manual pass (Chrome, Firefox, Safari, iOS Safari, Android Chrome).
 - [ ] **(S)** Publish measured limits table (from S5) to the README.
 - [ ] **(M)** Launch assets: 60-second demo video, 3-screenshot set, comparison page, a "How to verify we don't upload your files" blog post.

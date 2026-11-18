@@ -5,6 +5,7 @@ import { CommandPalette } from './components/CommandPalette.js';
 import { TopBar } from './components/TopBar.js';
 import { TrustModal } from './components/TrustModal.js';
 import { pdfjsRenderEngine } from './engines/pdfjsRender.js';
+import { isRtlLocale, type Locale } from './i18n/messages.js';
 import { ComparePage } from './pages/ComparePage.js';
 import { EmbedPage } from './pages/EmbedPage.js';
 import { HomePage } from './pages/HomePage.js';
@@ -54,7 +55,13 @@ export function App() {
   const [activeToolId, setActiveToolId] = useState('rotate');
   const [toast, setToast] = useState<string | null>(null);
   const [thumbnails, setThumbnails] = useState<string[]>([]);
+  const [locale, setLocale] = useState<Locale>('en');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    document.documentElement.dir = isRtlLocale(locale) ? 'rtl' : 'ltr';
+  }, [locale]);
 
   const {
     needRefresh: [needRefresh],
@@ -255,11 +262,15 @@ export function App() {
 
   return (
     <div className="app">
-      <TopBar
-        onHome={() => navigate('#/')}
-        onOpenTrust={() => setTrustOpen(true)}
-        swReady={swStatus.startsWith('ready')}
-      />
+      {!route.startsWith('#/embed') && (
+        <TopBar
+          onHome={() => navigate('#/')}
+          onOpenTrust={() => setTrustOpen(true)}
+          swReady={swStatus.startsWith('ready')}
+          locale={locale}
+          onChangeLocale={setLocale}
+        />
+      )}
 
       <input
         ref={fileInputRef}

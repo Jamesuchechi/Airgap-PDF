@@ -11,8 +11,16 @@ export function CommandPalette({ open, onClose, onSelectTool }: CommandPalettePr
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    if (!open) setQuery('');
-  }, [open]);
+    if (!open) {
+      setQuery('');
+      return;
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
 
   if (!open) return null;
 

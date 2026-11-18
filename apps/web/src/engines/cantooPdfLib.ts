@@ -563,6 +563,8 @@ export const cantooPdfEngine: PdfEngine = {
         ...(opts?.password !== undefined ? { password: opts.password } : {}),
         ignoreEncryption: false,
       });
+      // Eagerly validate page tree so malformed /Pages dicts fail cleanly inside open()
+      doc.getPageCount();
       return new CantooPdfDoc(doc);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);

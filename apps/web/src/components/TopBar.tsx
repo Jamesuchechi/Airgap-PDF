@@ -1,10 +1,14 @@
+import { LOCALES, type Locale, t } from '../i18n/messages.js';
+
 interface TopBarProps {
   onHome: () => void;
   onOpenTrust: () => void;
   swReady: boolean;
+  locale: Locale;
+  onChangeLocale: (next: Locale) => void;
 }
 
-export function TopBar({ onHome, onOpenTrust, swReady }: TopBarProps) {
+export function TopBar({ onHome, onOpenTrust, swReady, locale, onChangeLocale }: TopBarProps) {
   return (
     <header className="topbar">
       <button type="button" className="brand" onClick={onHome}>
@@ -22,16 +26,40 @@ export function TopBar({ onHome, onOpenTrust, swReady }: TopBarProps) {
         </svg>
         Airgap
       </button>
-      <button
-        type="button"
-        className="pill"
-        data-testid="trust-pill"
-        onClick={onOpenTrust}
-        aria-label="Open Trust panel"
-      >
-        <span className="dot" aria-hidden="true" />0 OBSERVED REQUESTS · CSP ACTIVE
-        {swReady ? ' · OFFLINE READY' : ''}
-      </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <select
+          aria-label="Language"
+          value={locale}
+          onChange={(e) => onChangeLocale(e.target.value as Locale)}
+          className="mono"
+          style={{
+            background: 'transparent',
+            color: 'var(--muted)',
+            border: '1px solid var(--border)',
+            borderRadius: 999,
+            padding: '4px 10px',
+            fontSize: 11,
+            cursor: 'pointer',
+          }}
+        >
+          {LOCALES.map((l) => (
+            <option key={l.code} value={l.code}>
+              {l.label}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          className="pill"
+          data-testid="trust-pill"
+          onClick={onOpenTrust}
+          aria-label="Open Trust panel"
+        >
+          <span className="dot" aria-hidden="true" />
+          {t(locale, 'trust.pill')}
+          {swReady ? ` · ${t(locale, 'trust.offline')}` : ''}
+        </button>
+      </div>
     </header>
   );
 }
