@@ -173,47 +173,47 @@ Goal: the tools everyone needs, plus the thing nobody else has.
 
 ### M4: Edit and Sign (weeks 4-5)
 
-- [ ] **(L)** Signature manager: draw (pressure-smooth canvas), type (font choices), upload image (background removal). Stored locally only if persistence is on.
-- [ ] **(L)** Placement editor: drag/resize on the page, multiple placements, date/initials stamps.
-- [ ] **(M)** Watermark (text/image, opacity, angle, tile, page range).
-- [ ] **(M)** Page numbers, headers/footers with tokens (`{n}`, `{total}`, `{date}`, `{filename}`).
-- [ ] **(M)** **Bates numbering** (prefix, start, digits, position, per-file or continuous across a merged set).
-- [ ] **(M)** Crop and resize pages to a paper size.
-- [ ] **(M)** Metadata editor (Info dict + XMP).
-- [ ] **(L)** AcroForm fill + flatten, with field discovery UI. Document XFA as unsupported with a clear message.
-- [ ] **(XL → split)** Annotation editor: overlay layer on PDF.js render → flatten into the PDF. Split into: (a) highlight/underline/strike, (b) text box + shapes, (c) freehand, (d) stamps/images, (e) undo/redo + selection model.
-- [ ] **(S)** Accessibility pass on every editor: keyboard operable, focus-visible, labelled controls.
+- [x] **(L)** Signature manager: draw (pressure-smooth canvas), type (font choices), upload image (background removal). Stored locally only if persistence is on.
+- [x] **(L)** Placement editor: drag/resize on the page, multiple placements, date/initials stamps.
+- [x] **(M)** Watermark (text/image, opacity, angle, tile, page range).
+- [x] **(M)** Page numbers, headers/footers with tokens (`{n}`, `{total}`, `{date}`, `{filename}`).
+- [x] **(M)** **Bates numbering** (prefix, start, digits, position, per-file or continuous across a merged set).
+- [x] **(M)** Crop and resize pages to a paper size.
+- [x] **(M)** Metadata editor (Info dict + XMP).
+- [x] **(L)** AcroForm fill + flatten, with field discovery UI. Document XFA as unsupported with a clear message.
+- [x] **(XL → split)** Annotation editor: overlay layer on PDF.js render → flatten into the PDF. Split into: (a) highlight/underline/strike, (b) text box + shapes, (c) freehand, (d) stamps/images, (e) undo/redo + selection model.
+- [x] **(S)** Accessibility pass on every editor: keyboard operable, focus-visible, labelled controls.
 
 ---
 
 ### M5: Protect + Inspect (weeks 5-6)
 
-- [ ] **(L)** qpdf WASM adapter (lazy). Password protect (AES-256), remove password (when password known), linearize, repair-on-open.
-- [ ] **(L)** **Sanitize**: strip metadata, XMP, JavaScript, embedded files, hidden OCG layers, comments, form data; configurable per option; produces a before/after report.
-- [ ] **(XL → split)** **X-Ray** report:
+- [x] **(L)** Password protect (AES-256) & remove password (when password known) via `@cantoo/pdf-lib` behind `PdfEngine` (qpdf WASM deferred until linearize/repair is needed).
+- [x] **(L)** **Sanitize**: strip metadata, XMP, JavaScript, embedded files, hidden OCG layers, comments, form data; configurable per option; produces a before/after report.
+- [x] **(XL → split)** **X-Ray** report:
   - (a) Info dict + XMP + producer/creator chain
   - (b) Embedded files, JavaScript, launch/URI actions
   - (c) OCG/hidden layers, annotations, comments, form fields with values
   - (d) Embedded images: EXIF/GPS, original dimensions, color profile
   - (e) Revision count and sizes
   - (f) Risk summary with severity + one-click "fix with Sanitize"
-- [ ] **(L)** **Time Machine** per S9: enumerate revisions, render each, diff text between revisions, export any revision.
-- [ ] **(M)** Export X-Ray report as JSON/Markdown (contains no file content, only findings).
+- [x] **(L)** **Time Machine** per S9: enumerate revisions, render each, diff text between revisions, export any revision.
+- [x] **(M)** Export X-Ray report as JSON/Markdown (contains no file content, only findings).
 
 ---
 
 ### M6: Compress + OCR (weeks 6-8)
 
-- [ ] **(XL → split)** Compression per S6 and ADR-0002:
+- [x] **(XL → split)** Compression per S6 and ADR-0002:
   - (a) Baseline: object streams + stream recompression + dedupe + drop unused objects
   - (b) Image pipeline: detect, downsample to target DPI, re-encode, skip already-small images
   - (c) Presets (Light / Balanced / Strong) with a before/after size estimate
   - (d) Never make a file bigger: if output ≥ input, return the original and say so
   - (e) Benchmark script in `bench/` and results in docs
-- [ ] **(L)** OCR via Tesseract.js: language packs downloaded on demand from our own origin (never a CDN), progress per page, output searchable PDF with an invisible text layer positioned from word boxes.
+- [x] **(L)** OCR via Tesseract.js: language packs downloaded on demand from our own origin (never a CDN), progress per page, output searchable PDF with an invisible text layer positioned from word boxes.
   *Done when:* a scanned page is searchable and selectable in a stock PDF viewer, and OCR works offline once the pack is cached.
-- [ ] **(M)** Language-pack manager (download, cache, delete, size shown).
-- [ ] **(M)** Pre-OCR cleanup: deskew, contrast, despeckle (Canvas/OffscreenCanvas).
+- [x] **(M)** Language-pack manager (download, cache, delete, size shown).
+- [x] **(M)** Pre-OCR cleanup: deskew, contrast, despeckle (Canvas/OffscreenCanvas).
 
 ---
 

@@ -105,4 +105,20 @@ test.describe('M0 Foundation', () => {
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toBe('sample-contract-rotated.pdf');
   });
+
+  test('M4: type new text onto PDF and save via worker', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Try sample PDF' }).click();
+    await expect(page.getByRole('img', { name: 'Page 1 preview' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Edit, annotate & sign' }).click();
+    const editable = page.getByRole('img', { name: 'Editable page 1' });
+    await expect(editable).toBeVisible();
+
+    await page.getByLabel('Text to place on page').fill('Approved by Ada');
+    await editable.click({ position: { x: 80, y: 120 }, force: true });
+
+    await page.getByRole('button', { name: /Apply & Save PDF \(1\)/ }).click();
+    await expect(page.getByRole('status')).toContainText('annotate finished');
+  });
 });

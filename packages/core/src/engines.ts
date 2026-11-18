@@ -41,6 +41,85 @@ export interface ImagePageOptions {
   marginPt: number;
 }
 
+export interface DrawTextOptions {
+  text: string;
+  xPct: number;
+  yPct: number;
+  fontSize?: number;
+  colorHex?: string;
+  opacity?: number;
+  rotateDeg?: number;
+}
+
+export interface DrawWatermarkOptions {
+  text: string;
+  opacity?: number;
+  angle?: number;
+  tile?: boolean;
+  fontSize?: number;
+  colorHex?: string;
+}
+
+export interface DrawImageOverlayOptions {
+  xPct: number;
+  yPct: number;
+  widthPct: number;
+  heightPct?: number;
+  opacity?: number;
+}
+
+export interface DrawRectOptions {
+  xPct: number;
+  yPct: number;
+  widthPct: number;
+  heightPct: number;
+  colorHex?: string;
+  opacity?: number;
+  filled?: boolean;
+}
+
+export interface DrawFreehandOptions {
+  points: Array<{ xPct: number; yPct: number }>;
+  colorHex?: string;
+  strokeWidth?: number;
+}
+
+export interface CropResizeOptions {
+  mode: 'crop' | 'resize';
+  paperSize?: 'a4' | 'letter';
+  marginPt?: number;
+}
+
+export interface FormFieldInfo {
+  name: string;
+  type: 'text' | 'checkbox' | 'dropdown' | 'radio' | 'unknown';
+  value: string | boolean;
+  options?: string[];
+}
+
+export interface SanitizeOptions {
+  metadata: boolean;
+  javascript: boolean;
+  embeddedFiles: boolean;
+  hiddenLayers: boolean;
+  annotations: boolean;
+  forms: boolean;
+}
+
+export interface XRaySummary {
+  metadata: PdfMetadata;
+  hasXmpMetadata: boolean;
+  hasJavaScript: boolean;
+  hasOpenAction: boolean;
+  hasEmbeddedFiles: boolean;
+  embeddedFileCount: number;
+  hasHiddenLayers: boolean;
+  annotationCount: number;
+  formFieldCount: number;
+  hasPieceInfo: boolean;
+  hasStructTree: boolean;
+}
+
 export interface PdfDoc {
   readonly pageCount: number;
   resolveRange(expr: string): number[];
@@ -52,6 +131,23 @@ export interface PdfDoc {
     mime: 'image/png' | 'image/jpeg',
     opts: ImagePageOptions,
   ): Promise<void>;
+  drawText(pageIndex: number, opts: DrawTextOptions): Promise<void>;
+  drawWatermark(pageIndex: number, opts: DrawWatermarkOptions): Promise<void>;
+  drawImageOverlay(
+    pageIndex: number,
+    bytes: Uint8Array,
+    mime: 'image/png' | 'image/jpeg',
+    opts: DrawImageOverlayOptions,
+  ): Promise<void>;
+  drawRect(pageIndex: number, opts: DrawRectOptions): void;
+  drawFreehand(pageIndex: number, opts: DrawFreehandOptions): void;
+  cropOrResize(pageIndex: number, opts: CropResizeOptions): void;
+  getMetadata(): PdfMetadata;
+  getFormFields(): FormFieldInfo[];
+  fillFormFields(values: Record<string, string | boolean>, flatten: boolean): void;
+  sanitize(opts: SanitizeOptions): void;
+  inspect(): XRaySummary;
+  recompressImages(opts: { maxDim: number; quality: number }): Promise<number>;
   removePage(index: number): void;
   setMetadata(meta: Partial<PdfMetadata>): void;
   save(opts?: SavePdfOptions): Promise<Asset>;

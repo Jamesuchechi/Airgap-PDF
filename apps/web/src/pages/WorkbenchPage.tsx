@@ -1,6 +1,11 @@
 import type { Asset } from '@airgap-pdf/core';
 import { useEffect, useState } from 'react';
+import { FormFillEditor } from '../components/FormFillEditor.js';
+import { OcrPanel } from '../components/OcrPanel.js';
+import { SignAnnotateEditor } from '../components/SignAnnotateEditor.js';
+import { TimeMachinePanel } from '../components/TimeMachinePanel.js';
 import { ToolOptionsForm } from '../components/ToolOptionsForm.js';
+import { XRayPanel } from '../components/XRayPanel.js';
 import type { JobState } from '../stores/workspaceStore.js';
 import { getTool, TOOLS } from '../tools/registry.js';
 
@@ -53,6 +58,55 @@ function getDefaultOptions(toolId: string): Record<string, unknown> {
       return { dpi: 150, format: 'png', pages: 'all' };
     case 'pdf-to-text':
       return { format: 'markdown', pages: 'all' };
+    case 'watermark':
+      return {
+        text: 'CONFIDENTIAL',
+        opacity: 0.16,
+        angle: 35,
+        tile: false,
+        fontSize: 42,
+        colorHex: '#444444',
+        pages: 'all',
+      };
+    case 'page-numbers':
+      return {
+        template: 'Page {n} of {total}',
+        position: 'bottom-center',
+        fontSize: 11,
+        startAt: 1,
+        pages: 'all',
+      };
+    case 'bates':
+      return {
+        prefix: 'CONF-',
+        start: 1,
+        digits: 6,
+        position: 'bottom-right',
+        continuous: true,
+      };
+    case 'crop-resize':
+      return { mode: 'resize', paperSize: 'a4', marginPt: 36, pages: 'all' };
+    case 'metadata':
+      return { title: '', author: '', subject: '', keywords: '', creator: '', producer: '' };
+    case 'protect':
+      return { userPassword: '', ownerPassword: '' };
+    case 'unlock':
+      return { password: '' };
+    case 'sanitize':
+      return {
+        metadata: true,
+        javascript: true,
+        embeddedFiles: true,
+        hiddenLayers: true,
+        annotations: true,
+        forms: true,
+      };
+    case 'xray':
+      return { format: 'json' };
+    case 'compress':
+      return { level: 'balanced' };
+    case 'ocr':
+      return { lang: 'eng', grayscale: true, contrast: 1.35, despeckle: true };
     default:
       return {};
   }
@@ -247,8 +301,16 @@ export function WorkbenchPage({
           ))}
 
           <span className="mono" style={{ padding: '10px 12px 4px' }}>
-            Protect
+            Protect &amp; Inspect
           </span>
+          <button
+            type="button"
+            className="ghost"
+            aria-current={activeToolId === 'time-machine' ? 'page' : undefined}
+            onClick={() => onSelectTool('time-machine')}
+          >
+            Time Machine
+          </button>
           <button type="button" className="ghost" onClick={() => onNavigate('#/redact')}>
             Redact &amp; Verify
           </button>
@@ -290,6 +352,34 @@ export function WorkbenchPage({
           </div>
 
           {memoryWarning && <div className="alert">{memoryWarning}</div>}
+
+          {activeTool.id === 'annotate' && (
+            <SignAnnotateEditor
+              asset={primaryAsset}
+              pageIndex={selectedPage}
+              disabled={activeJob !== null}
+              onApply={(operations) => onRunTool('annotate', [primaryAsset], { operations })}
+            />
+          )}
+
+          {activeToolId === 'xray' && (
+            <XRayPanel
+              asset={primaryAsset}
+              disabled={activeJob !== null}
+              onFixWithSanitize={(opts) =>
+                onRunTool('sanitize', [primaryAsset], opts as unknown as Record<string, unknown>)
+              }
+            />
+          )}
+
+          {activeToolId === 'time-machine' && <TimeMachinePanel asset={primaryAsset} />}
+
+          {activeToolId === 'ocr' && (
+            <OcrPanel
+              selectedLang={typeof formValues.lang === 'string' ? formValues.lang : 'eng'}
+              onSelectLang={(code) => setFormValues((prev) => ({ ...prev, lang: code }))}
+            />
+          )}
 
           <ul
             className="thumb-grid"
@@ -437,6 +527,19 @@ export function WorkbenchPage({
               Select any page thumbnail to move (←/→), rotate (↻), duplicate (+), or delete (✕),
               then click Apply.
             </p>
+          ) : activeTool.id === 'annotate' ? (
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)' }}>
+              Use the interactive editor to type new text, sign, highlight, or draw on page{' '}
+              {selectedPage + 1}. Click any thumbnail below to switch pages.
+            </p>
+          ) : activeTool.id === 'form-fill' ? (
+            <FormFillEditor
+              asset={primaryAsset}
+              disabled={activeJob !== null}
+              onApply={(values, flatten) =>
+                onRunTool('form-fill', [primaryAsset], { values, flatten })
+              }
+            />
           ) : (
             <ToolOptionsForm
               schema={activeTool.options}
@@ -445,14 +548,16 @@ export function WorkbenchPage({
             />
           )}
 
-          <button
-            type="button"
-            className="btn"
-            disabled={activeJob !== null || needsMoreFiles}
-            onClick={handleRun}
-          >
-            {activeJob ? 'Running...' : `Run ${activeTool.name.toLowerCase()}`}
-          </button>
+          {activeTool.id !== 'annotate' && activeTool.id !== 'form-fill' && (
+            <button
+              type="button"
+              className="btn"
+              disabled={activeJob !== null || needsMoreFiles}
+              onClick={handleRun}
+            >
+              {activeJob ? 'Running...' : `Run ${activeTool.name.toLowerCase()}`}
+            </button>
+          )}
         </aside>
       </div>
 

@@ -33,6 +33,16 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        globIgnores: ['tesseract/**'],
+        runtimeCaching: [
+          {
+            urlPattern: /\/tesseract\//,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'airgap-tesseract-core',
+            },
+          },
+        ],
       },
     }),
   ],

@@ -7,10 +7,11 @@ export interface HarnessParams<O> {
   validOptions: O;
   invalidOptions?: unknown;
   pdf: PdfEngine;
+  outputPassword?: string;
 }
 
 export async function assertToolInvariants<O>(params: HarnessParams<O>): Promise<Asset[]> {
-  const { tool, inputs, validOptions, invalidOptions, pdf } = params;
+  const { tool, inputs, validOptions, invalidOptions, pdf, outputPassword } = params;
 
   // 1. Reject invalid options
   if (invalidOptions !== undefined) {
@@ -60,7 +61,10 @@ export async function assertToolInvariants<O>(params: HarnessParams<O>): Promise
   // 4. Outputs re-open cleanly
   for (const out of res1.outputs) {
     if (out.mime === 'application/pdf') {
-      const opened = await pdf.open(out);
+      const opened = await pdf.open(
+        out,
+        outputPassword !== undefined ? { password: outputPassword } : undefined,
+      );
       if (opened.pageCount < 0) {
         throw new Error(`Invalid pageCount for ${out.name}`);
       }
