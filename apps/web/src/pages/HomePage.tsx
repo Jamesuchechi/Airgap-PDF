@@ -14,27 +14,62 @@ const ONLY_HERE = [
   {
     id: 'redact',
     title: 'Redact, verified',
-    desc: 'Removes text, then proves it.',
+    desc: 'Removes text & pixels, then proves 0 leaks.',
     route: '#/redact',
+    badge: 'Flagship',
   },
-  { id: 'xray', title: 'X-Ray', desc: 'What is this file leaking?', route: '#/workbench' },
+  {
+    id: 'xray',
+    title: 'X-Ray',
+    desc: 'Inspect hidden scripts, metadata & attachments.',
+    route: '#/workbench',
+    badge: 'Audit',
+  },
   {
     id: 'timemachine',
     title: 'Time Machine',
-    desc: 'Recover hidden revisions.',
+    desc: 'Recover earlier incremental PDF revisions.',
     route: '#/workbench',
+    badge: 'Forensics',
   },
-  { id: 'compare', title: 'Compare', desc: 'Text and pixel diff.', route: '#/compare' },
+  {
+    id: 'compare',
+    title: 'Compare',
+    desc: 'Myers text diff & perceptual pixel overlay.',
+    route: '#/compare',
+    badge: 'Diff',
+  },
 ] as const;
 
 const EVERYTHING_ELSE = [
-  { id: 'reader', label: 'Reader & Editor', route: '#/reader' },
-  { id: 'rotate', label: 'Rotate', route: '#/workbench' },
-  { id: 'merge', label: 'Merge', route: '#/workbench' },
-  { id: 'split', label: 'Split', route: '#/workbench' },
-  { id: 'compress', label: 'Compress', route: '#/workbench' },
-  { id: 'scan', label: 'Scanner', route: '#/scan' },
-  { id: 'recipes', label: 'Recipes', route: '#/recipe' },
+  {
+    id: 'reader',
+    label: 'Reader & Editor',
+    sub: 'Preview, search & edit text directly',
+    route: '#/reader',
+  },
+  { id: 'rotate', label: 'Rotate', sub: '90° / 180° / 270° page rotation', route: '#/workbench' },
+  { id: 'merge', label: 'Merge', sub: 'Combine multiple PDFs in order', route: '#/workbench' },
+  {
+    id: 'split',
+    label: 'Split',
+    sub: 'Extract ranges or split every N pages',
+    route: '#/workbench',
+  },
+  {
+    id: 'compress',
+    label: 'Compress',
+    sub: 'Shrink size, never grows files',
+    route: '#/workbench',
+  },
+  {
+    id: 'ocr',
+    label: 'OCR (Local)',
+    sub: 'Searchable PDFs via Tesseract.js',
+    route: '#/workbench',
+  },
+  { id: 'scan', label: 'Scanner', sub: 'Camera capture & perspective crop', route: '#/scan' },
+  { id: 'recipes', label: 'Recipes', sub: 'Chain multi-step JSON pipelines', route: '#/recipe' },
 ] as const;
 
 export function HomePage({
@@ -59,16 +94,12 @@ export function HomePage({
   return (
     <main>
       <div className="hero">
-        <div
-          style={{ display: 'flex', flexDirection: 'column', gap: 22, justifyContent: 'center' }}
-        >
-          <div className="mono" style={{ color: 'var(--accent)' }}>
-            The sealed PDF workbench
-          </div>
+        <div>
+          <span className="eyebrow">The sealed PDF workbench</span>
           <h1 className="hero-title">Your PDF never leaves the room.</h1>
-          <p style={{ margin: 0, maxWidth: 480, color: '#B4BEB8', fontSize: 17 }}>
-            Merge, redact, sign and compress entirely on this device. No upload, no account. Switch
-            off Wi-Fi and keep working.
+          <p className="hero-sub">
+            Read, edit, redact, sign, OCR, compare and compress entirely on this device. No upload,
+            no account. Switch off Wi-Fi and keep working.
           </p>
           <section
             aria-label="Drop PDF files here"
@@ -86,10 +117,13 @@ export function HomePage({
             <button type="button" className="btn2" onClick={onSamplePdf}>
               Try sample PDF
             </button>
+            <button type="button" className="btn2" onClick={() => onNavigate('#/reader')}>
+              Reader &amp; Editor
+            </button>
             <button type="button" className="btn2" onClick={onOpenTrust}>
               Prove it in 30s
             </button>
-            <span className="mono">or drop PDFs anywhere</span>
+            <span className="mono">or drop PDFs anywhere · Ctrl+K for commands</span>
           </section>
         </div>
 
@@ -112,6 +146,7 @@ export function HomePage({
                 </div>
               </div>
             </div>
+
             <div className="no-route">
               {'// // //'}
               <br />
@@ -119,15 +154,16 @@ export function HomePage({
               <br />
               ROUTE
             </div>
+
             <div className="diagram-box remote">
-              <span className="mono">The internet</span>
-              <span style={{ color: 'var(--muted-2)', fontSize: 13, marginTop: 6 }}>
-                never sees a byte
+              <span className="mono" style={{ color: 'var(--muted)' }}>
+                The internet
               </span>
+              <span style={{ color: 'var(--muted)', fontSize: 12 }}>never sees a byte</span>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gap: 0 }}>
+          <div style={{ display: 'grid', gap: 10 }}>
             <div className="row">
               <span className="mono">Observed requests</span>
               <span style={{ color: 'var(--accent)' }}>0</span>
@@ -158,16 +194,28 @@ export function HomePage({
               className="feature-card"
               onClick={() => onNavigate(item.route)}
             >
-              <b style={{ fontSize: 17 }}>{item.title}</b>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <b style={{ fontSize: 17 }}>{item.title}</b>
+                <span className="mono" style={{ fontSize: 10, color: 'var(--accent)' }}>
+                  {item.badge}
+                </span>
+              </div>
               <span style={{ color: 'var(--muted)', fontSize: 13 }}>{item.desc}</span>
             </button>
           ))}
         </div>
 
-        <div className="mono" style={{ marginTop: 10 }}>
+        <div className="mono" style={{ marginTop: 12 }}>
           Everything else
         </div>
-        <div className="g6">
+        <div className="g4">
           {EVERYTHING_ELSE.map((item) => (
             <button
               key={item.id}
@@ -175,11 +223,20 @@ export function HomePage({
               className="panel tool-tile"
               onClick={() => onNavigate(item.route)}
             >
-              {item.label}
+              <span>{item.label}</span>
+              <span style={{ color: 'var(--muted)', fontSize: 12, fontWeight: 400 }}>
+                {item.sub}
+              </span>
             </button>
           ))}
         </div>
       </section>
+
+      <footer className="trust-strip">
+        <span>100% Client-Side WASM · 0 Bytes Uploaded</span>
+        <span>CSP-Sealed Workers · Offline PWA</span>
+        <span>21 Node CLI Tools · Open Source</span>
+      </footer>
     </main>
   );
 }

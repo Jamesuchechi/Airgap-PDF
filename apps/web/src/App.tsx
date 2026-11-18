@@ -55,6 +55,7 @@ export function App() {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [activeToolId, setActiveToolId] = useState('rotate');
   const [toast, setToast] = useState<string | null>(null);
+  const [toastDetails, setToastDetails] = useState<string[]>([]);
   const [thumbnails, setThumbnails] = useState<string[]>([]);
   const [locale, setLocale] = useState<Locale>('en');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -250,14 +251,17 @@ export function App() {
       if (result.ok) {
         pushResult(result.outputs);
         setActiveJob(null);
-        setToast(`${toolId} finished (${result.outputs.length} output).`);
+        setToast(result.summary ?? `${toolId} finished (${result.outputs.length} output).`);
+        setToastDetails(result.details ?? []);
       } else {
         setActiveJob(null);
         setToast(result.error.userMessage);
+        setToastDetails([]);
       }
     } catch (err) {
       setActiveJob(null);
       setToast(err instanceof Error ? err.message : 'Tool execution failed.');
+      setToastDetails([]);
     }
   };
 
@@ -265,6 +269,8 @@ export function App() {
     <div className="app">
       {!route.startsWith('#/embed') && (
         <TopBar
+          route={route}
+          onNavigate={navigate}
           onHome={() => navigate('#/')}
           onOpenTrust={() => setTrustOpen(true)}
           swReady={swStatus.startsWith('ready')}
@@ -306,7 +312,14 @@ export function App() {
 
       {toast && (
         <div role="status" className="alert" style={{ margin: '12px 40px 0' }}>
-          {toast}
+          <div>{toast}</div>
+          {toastDetails.length > 0 && (
+            <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 12 }}>
+              {toastDetails.map((d) => (
+                <li key={d}>{d}</li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
 

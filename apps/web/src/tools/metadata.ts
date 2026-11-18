@@ -31,21 +31,34 @@ export const metadataTool = defineTool({
     }
     ctx.progress(0.2, 'Opening PDF...');
     const doc = await ctx.pdf.open(input);
+    const kwList = keywords
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
     doc.setMetadata({
       title,
       author,
       subject,
-      keywords: keywords
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
+      keywords: kwList,
       creator,
       producer,
     });
     ctx.progress(0.85, 'Saving PDF...');
     const out = await doc.save({ name: `${input.stem}-metadata.pdf`, objectStreams: true });
     ctx.progress(1, 'Done');
-    return ok([out]);
+    const details = (
+      [
+        ['Title', title],
+        ['Author', author],
+        ['Subject', subject],
+        ['Keywords', kwList.join(', ')],
+        ['Creator', creator],
+        ['Producer', producer],
+      ] as const
+    )
+      .filter(([, v]) => v.trim().length > 0)
+      .map(([k, v]) => `${k}: "${v}"`);
+    return ok([out], `Updated PDF metadata (${details.length} field(s) set)`, details);
   },
 });
 

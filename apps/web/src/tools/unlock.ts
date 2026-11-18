@@ -32,7 +32,7 @@ export const unlockTool = defineTool({
     ctx.progress(0.7, 'Saving unlocked PDF...');
     const out = await outDoc.save({ name: `${input.stem}-unlocked.pdf`, objectStreams: true });
     ctx.progress(1, 'Done');
-    return ok([out]);
+    return ok([out], `Unlocked "${input.name}" (${src.pageCount} page(s), password removed)`);
   },
 });
 

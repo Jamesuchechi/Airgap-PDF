@@ -1,6 +1,8 @@
 import { LOCALES, type Locale, t } from '../i18n/messages.js';
 
 interface TopBarProps {
+  route: string;
+  onNavigate: (route: string) => void;
   onHome: () => void;
   onOpenTrust: () => void;
   swReady: boolean;
@@ -8,24 +10,57 @@ interface TopBarProps {
   onChangeLocale: (next: Locale) => void;
 }
 
-export function TopBar({ onHome, onOpenTrust, swReady, locale, onChangeLocale }: TopBarProps) {
+const NAV_ITEMS = [
+  { label: 'Workbench', route: '#/workbench' },
+  { label: 'Reader & Editor', route: '#/reader' },
+  { label: 'Redact', route: '#/redact' },
+  { label: 'Compare', route: '#/compare' },
+  { label: 'Scanner', route: '#/scan' },
+  { label: 'Recipes', route: '#/recipe' },
+] as const;
+
+export function TopBar({
+  route,
+  onNavigate,
+  onHome,
+  onOpenTrust,
+  swReady,
+  locale,
+  onChangeLocale,
+}: TopBarProps) {
   return (
     <header className="topbar">
-      <button type="button" className="brand" onClick={onHome}>
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 28 28"
-          fill="none"
-          stroke="#6BFFB0"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          aria-hidden="true"
-        >
-          <path d="M20.5 6.5A10 10 0 1 0 24 14" />
-        </svg>
-        Airgap
-      </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+        <button type="button" className="brand" onClick={onHome}>
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
+            fill="none"
+            stroke="#6BFFB0"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M20.5 6.5A10 10 0 1 0 24 14" />
+          </svg>
+          Airgap
+        </button>
+
+        <nav className="topbar-nav" aria-label="Primary">
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.route}
+              type="button"
+              className="topbar-link"
+              aria-current={route.startsWith(item.route) ? 'page' : undefined}
+              onClick={() => onNavigate(item.route)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <select
           aria-label="Language"

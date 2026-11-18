@@ -37,7 +37,10 @@ export const protectTool = defineTool({
       },
     });
     ctx.progress(1, 'Done');
-    return ok([out]);
+    return ok([out], `Encrypted "${input.name}" with AES-256`, [
+      'User open password set',
+      ...(ownerPassword ? ['Owner permissions password set'] : []),
+    ]);
   },
 });
 

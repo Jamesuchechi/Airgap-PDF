@@ -30,11 +30,16 @@ export const formFillTool = defineTool({
     }
     ctx.progress(0.2, 'Opening AcroForm...');
     const doc = await ctx.pdf.open(input);
+    const filledKeys = Object.keys(values);
     doc.fillFormFields(values, flatten);
     ctx.progress(0.85, 'Saving PDF...');
     const out = await doc.save({ name: `${input.stem}-filled.pdf`, objectStreams: true });
     ctx.progress(1, 'Done');
-    return ok([out]);
+    return ok(
+      [out],
+      `Updated ${filledKeys.length} form field(s)${flatten ? ' and flattened form' : ''}`,
+      filledKeys.slice(0, 10).map((k) => `Field "${k}" = ${String(values[k])}`),
+    );
   },
 });
 

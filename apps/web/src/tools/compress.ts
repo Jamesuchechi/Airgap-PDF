@@ -34,23 +34,38 @@ export const compressTool = defineTool({
     const indices = Array.from({ length: src.pageCount }, (_, i) => i);
     await clean.copyPagesFrom(src, indices);
 
+    let imagesRecompressed = 0;
     if (level !== 'light') {
       ctx.progress(0.45, 'Recompressing embedded images...');
       const cfg =
         level === 'strong' ? { maxDim: 1100, quality: 0.62 } : { maxDim: 1650, quality: 0.78 };
-      await clean.recompressImages(cfg);
+      imagesRecompressed = await clean.recompressImages(cfg);
     }
 
     ctx.progress(0.85, 'Writing object streams...');
     const out = await clean.save({ name: `${input.stem}-compressed.pdf`, objectStreams: true });
     ctx.progress(1, 'Done');
 
+    const fmt = (b: number) =>
+      b < 1024
+        ? `${b} B`
+        : b < 1024 * 1024
+          ? `${(b / 1024).toFixed(1)} KB`
+          : `${(b / (1024 * 1024)).toFixed(2)} MB`;
+
     // Never make a file bigger
     if (out.size >= input.size) {
       ctx.log('info', 'Compressed output was not smaller; returning original.');
-      return ok([input]);
+      return ok([input], `Already optimal (${fmt(input.size)}) — kept original file.`, [
+        `Preset: ${level}`,
+        `Recompressed output (${fmt(out.size)}) was not smaller`,
+      ]);
     }
-    return ok([out]);
+    const savedPct = (((input.size - out.size) / input.size) * 100).toFixed(1);
+    return ok([out], `Compressed ${fmt(input.size)} -> ${fmt(out.size)} (${savedPct}% smaller)`, [
+      `Preset: ${level}`,
+      ...(imagesRecompressed > 0 ? [`Images recompressed: ${imagesRecompressed}`] : []),
+    ]);
   },
 });
 

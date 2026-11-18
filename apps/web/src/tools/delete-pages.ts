@@ -44,7 +44,10 @@ export const deletePagesTool = defineTool({
     ctx.progress(0.85, 'Saving PDF...');
     const out = await outDoc.save({ name: `${input.stem}-trimmed.pdf`, objectStreams: true });
     ctx.progress(1, 'Done');
-    return ok([out]);
+    return ok(
+      [out],
+      `Deleted ${toDelete.size} page(s) (${keep.length} of ${src.pageCount} remaining)`,
+    );
   },
 });
 

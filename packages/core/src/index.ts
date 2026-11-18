@@ -117,10 +117,15 @@ export interface ToolContext {
 }
 
 export type ToolResult =
-  | { ok: true; outputs: Asset[] }
+  | { ok: true; outputs: Asset[]; summary?: string; details?: string[] }
   | { ok: false; error: SerializedAirgapError };
 
-export const ok = (outputs: Asset[]): ToolResult => ({ ok: true, outputs });
+export const ok = (outputs: Asset[], summary?: string, details?: string[]): ToolResult => ({
+  ok: true,
+  outputs,
+  ...(summary !== undefined ? { summary } : {}),
+  ...(details !== undefined ? { details } : {}),
+});
 export const fail = (error: AirgapError): ToolResult => ({ ok: false, error: error.toJSON() });
 
 export interface ToolDefinition<O extends z.ZodTypeAny = z.ZodTypeAny> {
