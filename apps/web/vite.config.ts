@@ -6,6 +6,13 @@ export default defineConfig({
   base: process.env.BASE_PATH ?? '/airgap-pdf/',
   plugins: [
     react(),
+    {
+      name: 'dev-csp-style-hmr',
+      apply: 'serve',
+      transformIndexHtml(html) {
+        return html.replace("style-src 'self';", "style-src 'self' 'unsafe-inline';");
+      },
+    },
     VitePWA({
       registerType: 'prompt',
       manifest: {

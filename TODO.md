@@ -61,22 +61,22 @@ Each spike ends with an ADR or a note appended to ARCHITECTURE.md.
 
 Goal: a lean, instrumented repo with the security guardrails and deployed "hello world" proven before any feature work.
 
-- [ ] **(S)** Create repo `Jamesuchechi/airgap-pdf`, finalize `LICENSE` (MIT vs Apache-2.0), `.editorconfig`, `.gitignore`, `.gitattributes` (`*.pdf binary`).
+- [x] **(S)** Create repo `Jamesuchechi/airgap-pdf`, finalize `LICENSE` (MIT vs Apache-2.0), `.editorconfig`, `.gitignore`, `.gitattributes` (`*.pdf binary`).
   *Done when:* repo is public with a README stub.
-- [ ] **(S)** Lean pnpm workspace: `apps/web` + `packages/core` (defer `packages/{verify,cli}` to M2/M9).
+- [x] **(S)** Lean pnpm workspace: `apps/web` + `packages/core` (defer `packages/{verify,cli}` to M2/M9).
   *Done when:* `pnpm -r build` and `pnpm -r typecheck` pass.
-- [ ] **(S)** Lint + format with Biome; pre-commit via lefthook.
+- [x] **(S)** Lint + format with Biome; pre-commit via lefthook.
   *Done when:* a bad commit is rejected locally and in CI.
-- [ ] **(S)** Vitest set up; first test runs in CI.
-- [ ] **(S)** Vite config: `base` from `BASE_PATH`, hash routing, `build.target` evergreen, `assetsInlineLimit: 0`, worker `format: 'es'`.
-- [ ] **(S)** Self-host fonts (`Instrument Serif`, `Inter`, `JetBrains Mono`) and add `<meta>` CSP tag in `index.html` (ARCHITECTURE §11.1) + unit test asserting it.
-- [ ] **(M)** Implement the 1-line `blob:` `import` worker CSP shim (S1) + a trivial "ping" Vite ES module worker.
-- [ ] **(M)** Playwright set up with the **zero-network guard** as a global fixture (observing pages, dedicated workers, **and Service Workers**) + **offline** fixture helper (`context.setOffline(true)`).
+- [x] **(S)** Vitest set up; first test runs in CI.
+- [x] **(S)** Vite config: `base` from `BASE_PATH`, hash routing, `build.target` evergreen, `assetsInlineLimit: 0`, worker `format: 'es'`.
+- [x] **(S)** Self-host fonts (`Instrument Serif`, `Inter`, `JetBrains Mono`) and add `<meta>` CSP tag in `index.html` (ARCHITECTURE §11.1) + unit test asserting it.
+- [x] **(M)** Implement the 1-line `blob:` `import` worker CSP shim (S1) + a trivial "ping" Vite ES module worker.
+- [x] **(M)** Playwright set up with the **zero-network guard** as a global fixture (observing pages, dedicated workers, **and Service Workers**) + **offline** fixture helper (`context.setOffline(true)`).
   *Done when:* worker-CSP test passes on **Chromium, Firefox, and WebKit** (an off-origin `fetch()` from a bundled worker is blocked by CSP), and an off-origin request from any context fails CI.
-- [ ] **(S)** `ci.yml`: install → check → build → e2e on every PR. Cache pnpm store.
-- [ ] **(M)** `deploy.yml` to GitHub Pages (ARCHITECTURE §19): resolve latest Action tags and pin by commit SHA; emit `airgap.manifest.json`; run `actions/attest-build-provenance` on `airgap.manifest.json`.
+- [x] **(S)** `ci.yml`: install → check → build → e2e on every PR. Cache pnpm store.
+- [x] **(M)** `deploy.yml` to GitHub Pages (ARCHITECTURE §19): resolve latest Action tags and pin by commit SHA; emit `airgap.manifest.json`; run `actions/attest-build-provenance` on `airgap.manifest.json`.
   *Done when:* the "hello world" page is live on Pages with CSP and attestation working.
-- [ ] **(S)** Add `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, issue/PR templates, and `docs/adr/` (ADR-0001..0009).
+- [x] **(S)** Add `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, issue/PR templates, and `docs/adr/` (ADR-0001..0009).
 
 **Exit:** `main` is protected; worker-CSP passes on Chromium/Firefox/WebKit; zero-network + offline + deploy/attestation pipeline works.
 
@@ -87,39 +87,39 @@ Goal: a lean, instrumented repo with the security guardrails and deployed "hello
 Goal: the machinery every tool plugs into, proven by one trivial tool.
 
 **Core (packages/core)**
-- [ ] **(M)** `defineTool`, `Tool`, `ToolContext`, `ToolResult`, `ok()/fail()` types per ARCHITECTURE §6.
-- [ ] **(M)** Typed error taxonomy: `PasswordRequired`, `CorruptPdf`, `UnsupportedFeature`, `LimitExceeded`, `OutOfMemory`, `Cancelled`, `EngineUnavailable`. Must survive `structuredClone` across worker boundaries.
+- [x] **(M)** `defineTool`, `Tool`, `ToolContext`, `ToolResult`, `ok()/fail()` types per ARCHITECTURE §6.
+- [x] **(M)** Typed error taxonomy: `PasswordRequired`, `CorruptPdf`, `UnsupportedFeature`, `LimitExceeded`, `OutOfMemory`, `Cancelled`, `EngineUnavailable`. Must survive `structuredClone` across worker boundaries.
   *Done when:* each error round-trips through Comlink with its class and fields intact.
-- [ ] **(S)** `pageRange()` zod type + parser (`1-3,5,8-` / `odd` / `even` / `last-2` / `all`), 1-based in UI, 0-based internally.
+- [x] **(S)** `pageRange()` zod type + parser (`1-3,5,8-` / `odd` / `even` / `last-2` / `all`), 1-based in UI, 0-based internally.
   *Done when:* fast-check property tests pass (round-trip, no duplicates, always within bounds).
-- [ ] **(M)** `Limits` object (max pages, max decoded stream, max canvas pixels, depth, watchdog) with defaults from ARCHITECTURE §12.
-- [ ] **(M)** `Blob`-backed `Asset` model + lightweight `Version` model (defer SHA-256 content-addressing & OPFS/IDB to M2/M3).
-- [ ] **(S)** Tool registry: auto-discovery through a generated index (no manual list to forget).
-- [ ] **(M)** Tool-harness test helper: given a tool + fixtures, asserts the universal invariants (opens output, cancellable, no network, deterministic where claimed, progress is monotonic).
+- [x] **(M)** `Limits` object (max pages, max decoded stream, max canvas pixels, depth, watchdog) with defaults from ARCHITECTURE §12.
+- [x] **(M)** `Blob`-backed `Asset` model + lightweight `Version` model (defer SHA-256 content-addressing & OPFS/IDB to M2/M3).
+- [x] **(S)** Tool registry: auto-discovery through a generated index (no manual list to forget).
+- [x] **(M)** Tool-harness test helper: given a tool + fixtures, asserts the universal invariants (opens output, cancellable, no network, deterministic where claimed, progress is monotonic).
 
 **Engines (apps/web/src/engines)**
-- [ ] **(M)** `PdfEngine` interface + **`@cantoo/pdf-lib`** adapter (open, copy pages, rotate, delete, save with `useObjectStreams`, `encrypt`). Include a cross-viewer test for `encrypt()` + `useObjectStreams: true`.
-- [ ] **(M)** `RenderEngine` interface + PDF.js adapter (render page → `ImageBitmap`/`Blob`, extract text with positions). Self-host `cmaps/` and `standard_fonts/` in `public/pdfjs/`, set `isEvalSupported: false`, disable scripting, and route PDF.js worker through the `blob:` CSP shim.
-- [ ] **(S)** Lazy engine loader with capability negotiation and a clear `EngineUnavailable` failure.
+- [x] **(M)** `PdfEngine` interface + **`@cantoo/pdf-lib`** adapter (open, copy pages, rotate, delete, save with `useObjectStreams`, `encrypt`). Include a cross-viewer test for `encrypt()` + `useObjectStreams: true`.
+- [x] **(M)** `RenderEngine` interface + PDF.js adapter (render page → `ImageBitmap`/`Blob`, extract text with positions). Self-host `cmaps/` and `standard_fonts/` in `public/pdfjs/`, set `isEvalSupported: false`, disable scripting, and route PDF.js worker through the `blob:` CSP shim.
+- [x] **(S)** Lazy engine loader with capability negotiation and a clear `EngineUnavailable` failure.
 
 **Execution**
-- [ ] **(L)** Worker pool: size = `min(hardwareConcurrency - 1, 4)`, Comlink RPC, `Blob` inputs (never detach main thread's canonical copy), per-job `MessageChannel` for progress and cancellation, hard-cancel by terminating and respawning the worker, and **terminate idle heavy WASM workers** after use.
+- [x] **(L)** Worker pool: size = `min(hardwareConcurrency - 1, 4)`, Comlink RPC, `Blob` inputs (never detach main thread's canonical copy), per-job `MessageChannel` for progress and cancellation, hard-cancel by terminating and respawning the worker, and **terminate idle heavy WASM workers** after use.
   *Done when:* cancelling a 500-page merge frees the worker within 500 ms and the UI stays at 60 fps throughout.
-- [ ] **(M)** `MemoryGuard`: estimates peak usage = input size × tool multiplier; warns or refuses; uses `navigator.deviceMemory` where present and conservative defaults where not.
-- [ ] **(M)** Watchdog: a job with no progress for N seconds is flagged and offers to cancel.
+- [x] **(M)** `MemoryGuard`: estimates peak usage = input size × tool multiplier; warns or refuses; uses `navigator.deviceMemory` where present and conservative defaults where not.
+- [x] **(M)** Watchdog: a job with no progress for N seconds is flagged and offers to cancel.
 
 **Storage**
-- [ ] **(M)** In-memory `Blob` workspace store (default) with undo/redo stack (OPFS/IDB persistence deferred to M2/M3).
+- [x] **(M)** In-memory `Blob` workspace store (default) with undo/redo stack (OPFS/IDB persistence deferred to M2/M3).
 
 **Shell (apps/web)**
-- [ ] **(M)** App skeleton: hash router, layout, error boundary, toast system, theme (system/light/dark).
-- [ ] **(L)** File ingest: drag-and-drop, file picker, paste, folder drop, multi-select. Detect type by magic bytes, not extension. Reject non-PDF early with a useful message.
-- [ ] **(M)** Command palette (`⌘/Ctrl-K`) generated from the tool registry.
-- [ ] **(M)** Auto-generated tool options form from zod schema (fields: number, enum, boolean, string, page-range, color, file). Custom component override hook.
-- [ ] **(M)** Job panel: progress, cancel, retry, per-job log, memory warnings.
-- [ ] **(S)** Result handling: download, download all as zip (fflate), "use result as input" (chain).
-- [ ] **(S)** First tool end-to-end: **rotate** (also the template for `pnpm new:tool`).
-- [ ] **(M)** `pnpm new:tool <id>` scaffold script.
+- [x] **(M)** App skeleton: hash router, layout, error boundary, toast system, theme (system/light/dark).
+- [x] **(L)** File ingest: drag-and-drop, file picker, paste, folder drop, multi-select. Detect type by magic bytes, not extension. Reject non-PDF early with a useful message.
+- [x] **(M)** Command palette (`⌘/Ctrl-K`) generated from the tool registry.
+- [x] **(M)** Auto-generated tool options form from zod schema (fields: number, enum, boolean, string, page-range, color, file). Custom component override hook.
+- [x] **(M)** Job panel: progress, cancel, retry, per-job log, memory warnings.
+- [x] **(S)** Result handling: download, download all as zip (fflate), "use result as input" (chain).
+- [x] **(S)** First tool end-to-end: **rotate** (also the template for `pnpm new:tool`).
+- [x] **(M)** `pnpm new:tool <id>` scaffold script.
 
 **Exit:** a user can drop a PDF, rotate it, undo, and download it; the work runs in a worker; the zero-network and offline e2e tests pass.
 
@@ -130,25 +130,25 @@ Goal: the machinery every tool plugs into, proven by one trivial tool.
 Goal: the tools everyone needs, plus the thing nobody else has.
 
 **Organize tools**
-- [ ] **(M)** Merge (drag to order, per-file page ranges, bookmarks preserved where feasible).
-- [ ] **(M)** Split (ranges, every N pages, by bookmark, by blank-page separator).
-- [ ] **(M)** Delete / extract / duplicate pages.
-- [ ] **(L)** Visual page organizer: virtualised thumbnail grid (PDF.js render in worker, LRU cache), drag reorder, multi-select, rotate-in-place, keyboard operable.
+- [x] **(M)** Merge (drag to order, per-file page ranges, bookmarks preserved where feasible).
+- [x] **(M)** Split (ranges, every N pages, by bookmark, by blank-page separator).
+- [x] **(M)** Delete / extract / duplicate pages.
+- [x] **(L)** Visual page organizer: virtualised thumbnail grid (PDF.js render in worker, LRU cache), drag reorder, multi-select, rotate-in-place, keyboard operable.
   *Done when:* a 300-page document scrolls smoothly and reorders without dropping frames.
-- [ ] **(S)** Insert blank pages; interleave odd/even scans.
+- [x] **(S)** Insert blank pages; interleave odd/even scans.
 
 **Trust v1**
-- [ ] **(M)** **Trust panel** UI: `"0 observed requests · CSP active"` status, active CSP, allowed origins, session request log, link to verification steps.
-- [ ] **(M)** Request observer: `PerformanceObserver` for resource timing on the main thread + wrapped `fetch/XMLHttpRequest/WebSocket/sendBeacon` in workers reporting to the panel. Label honestly as *observed*.
-- [ ] **(M)** Build manifest: after build, emit `airgap.manifest.json` with a SHA-256 for every file; include commit SHA and build time.
-- [ ] **(M)** Provenance: `actions/attest-build-provenance` on `apps/web/dist/airgap.manifest.json` (plus entry bundles).
-- [ ] **(L)** `@airgap-pdf/verify` CLI (`packages/verify`): fetch deployed files, hash them, compare to the manifest, and verify the attestation.
+- [x] **(M)** **Trust panel** UI: `"0 observed requests · CSP active"` status, active CSP, allowed origins, session request log, link to verification steps.
+- [x] **(M)** Request observer: `PerformanceObserver` for resource timing on the main thread + wrapped `fetch/XMLHttpRequest/WebSocket/sendBeacon` in workers reporting to the panel. Label honestly as *observed*.
+- [x] **(M)** Build manifest: after build, emit `airgap.manifest.json` with a SHA-256 for every file; include commit SHA and build time.
+- [x] **(M)** Provenance: `actions/attest-build-provenance` on `apps/web/dist/airgap.manifest.json` (plus entry bundles).
+- [x] **(L)** `@airgap-pdf/verify` CLI (`packages/verify`): fetch deployed files, hash them, compare to the manifest, and verify the attestation.
   *Done when:* it passes on the live site and fails when a file is altered.
-- [ ] **(S)** "Offline ready" indicator wired to the service worker's precache status.
+- [x] **(S)** "Offline ready" indicator wired to the service worker's precache status.
 
 **PWA**
-- [ ] **(M)** `vite-plugin-pwa` (Workbox): precache the app shell; runtime-cache lazy WASM chunks on first use; never auto-reload during a running job (update prompt instead).
-- [ ] **(S)** Manifest, icons (maskable), theme colors, offline fallback page.
+- [x] **(M)** `vite-plugin-pwa` (Workbox): precache the app shell; runtime-cache lazy WASM chunks on first use; never auto-reload during a running job (update prompt instead).
+- [x] **(S)** Manifest, icons (maskable), theme colors, offline fallback page.
 
 **Launch plumbing**
 - [ ] **(S)** README screenshots / GIF of the flow; fill the status column honestly.

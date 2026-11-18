@@ -1,4 +1,11 @@
 import type { z } from 'zod';
+import type { Capability, PdfEngine, RenderEngine } from './engines.js';
+
+export { z } from 'zod';
+export * from './engines.js';
+export * from './harness.js';
+export * from './magicBytes.js';
+export * from './pageRange.js';
 
 export type AssetId = string;
 
@@ -94,6 +101,19 @@ export class AirgapError extends Error {
   }
 }
 
+export interface AbortSignalLike {
+  readonly aborted: boolean;
+}
+
+export interface ToolContext {
+  pdf: PdfEngine;
+  render?: RenderEngine;
+  progress(fraction: number, message?: string): void;
+  signal: AbortSignalLike;
+  limits: Readonly<Limits>;
+  log(level: 'debug' | 'info' | 'warn', msg: string): void;
+}
+
 export type ToolResult =
   | { ok: true; outputs: Asset[] }
   | { ok: false; error: SerializedAirgapError };
@@ -101,7 +121,7 @@ export type ToolResult =
 export const ok = (outputs: Asset[]): ToolResult => ({ ok: true, outputs });
 export const fail = (error: AirgapError): ToolResult => ({ ok: false, error: error.toJSON() });
 
-export interface ToolDefinition<O extends z.ZodTypeAny> {
+export interface ToolDefinition<O extends z.ZodTypeAny = z.ZodTypeAny> {
   id: string;
   name: string;
   summary: string;
@@ -109,7 +129,22 @@ export interface ToolDefinition<O extends z.ZodTypeAny> {
   accepts: { mime: string[]; min: number; max: number | 'many' };
   produces: 'pdf' | 'images' | 'text' | 'zip' | 'report';
   runtime: Array<'browser' | 'node'>;
+  needs?: Capability[];
+  memory?: { multiplier: number };
+  deterministic?: boolean;
   options: O;
+  run(ctx: ToolContext, input: Asset[], options: z.infer<O>): Promise<ToolResult>;
 }
 
 export const defineTool = <O extends z.ZodTypeAny>(def: ToolDefinition<O>) => def;
+
+export function sanitizeFilename(raw: string): { name: string; stem: string } {
+  const base = raw
+    .replace(/[/\\:\0<>|"?*]/g, '_')
+    .trim()
+    .slice(0, 120);
+  const name = base || 'document.pdf';
+  const dot = name.lastIndexOf('.');
+  const stem = dot > 0 ? name.slice(0, dot) : name;
+  return { name, stem };
+}
