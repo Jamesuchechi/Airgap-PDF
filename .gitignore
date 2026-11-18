@@ -5,5 +5,6 @@ playwright-report/
 test-results/
 coverage/
 *.local
+*.tsbuildinfo
 .DS_Store
 apps/web/public/pdfjs/

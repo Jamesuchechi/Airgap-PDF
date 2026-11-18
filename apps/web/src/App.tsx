@@ -6,15 +6,17 @@ import { TopBar } from './components/TopBar.js';
 import { TrustModal } from './components/TrustModal.js';
 import { pdfjsRenderEngine } from './engines/pdfjsRender.js';
 import { HomePage } from './pages/HomePage.js';
+import { RecipesPage } from './pages/RecipesPage.js';
 import { RedactPage } from './pages/RedactPage.js';
 import { WorkbenchPage } from './pages/WorkbenchPage.js';
 import { useWorkspaceStore } from './stores/workspaceStore.js';
 import { createSamplePdf, downloadAllAsZip, downloadAsset, ingestFiles } from './utils/ingest.js';
+import { executeToolStep } from './utils/recipeCodec.js';
 import { startMainThreadObserver } from './utils/trustObserver.js';
 import { createCspWorker } from './workers/createWorker.js';
 import type { PingResponse } from './workers/ping.worker.js';
 import pingWorkerUrl from './workers/ping.worker.ts?worker&url';
-import { estimateMemory, workerPool } from './workers/workerPool.js';
+import { estimateMemory } from './workers/workerPool.js';
 
 declare global {
   interface Window {
@@ -124,7 +126,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (!primaryAsset) {
+    if (primaryAsset?.mime !== 'application/pdf') {
       setThumbnails([]);
       return;
     }
@@ -200,42 +202,36 @@ export function App() {
     setMemoryWarning(mem.status === 'warn' ? (mem.message ?? null) : null);
 
     const jobId = crypto.randomUUID();
-    const { promise, cancel } = workerPool.runJob(
+    setActiveJob({
+      id: jobId,
       toolId,
-      inputs,
-      options,
-      (fraction, message) => {
+      status: 'running',
+      progress: 0.02,
+      message: 'Starting...',
+    });
+
+    try {
+      const result = await executeToolStep(toolId, inputs, options, (fraction, message) => {
         setActiveJob({
           id: jobId,
           toolId,
           status: 'running',
           progress: fraction,
           ...(message !== undefined ? { message } : {}),
-          cancel,
         });
-      },
-      () => {
-        setToast('Job is taking longer than expected. You can cancel anytime.');
-      },
-    );
+      });
 
-    setActiveJob({
-      id: jobId,
-      toolId,
-      status: 'running',
-      progress: 0.02,
-      message: 'Starting worker...',
-      cancel,
-    });
-
-    const result = await promise;
-    if (result.ok) {
-      pushResult(result.outputs);
+      if (result.ok) {
+        pushResult(result.outputs);
+        setActiveJob(null);
+        setToast(`${toolId} finished (${result.outputs.length} output).`);
+      } else {
+        setActiveJob(null);
+        setToast(result.error.userMessage);
+      }
+    } catch (err) {
       setActiveJob(null);
-      setToast(`${toolId} finished (${result.outputs.length} output).`);
-    } else {
-      setActiveJob(null);
-      setToast(result.error.userMessage);
+      setToast(err instanceof Error ? err.message : 'Tool execution failed.');
     }
   };
 
@@ -251,7 +247,7 @@ export function App() {
         ref={fileInputRef}
         type="file"
         multiple
-        accept="application/pdf,.pdf"
+        accept="application/pdf,.pdf,image/png,image/jpeg,image/webp"
         style={{ display: 'none' }}
         onChange={(e) => {
           if (e.target.files) void handleFiles(e.target.files);
@@ -284,7 +280,18 @@ export function App() {
         </div>
       )}
 
-      {route.startsWith('#/redact') ? (
+      {route.startsWith('#/recipe') ? (
+        <RecipesPage
+          fragmentParam={new URLSearchParams(route.split('?')[1] ?? '').get('r')}
+          assets={assets}
+          onCompleteOutputs={(outputs) => {
+            pushResult(outputs);
+            navigate('#/workbench');
+          }}
+          onChooseFiles={() => fileInputRef.current?.click()}
+          onSamplePdf={() => void handleSamplePdf()}
+        />
+      ) : route.startsWith('#/redact') ? (
         <RedactPage
           primaryAsset={primaryAsset}
           onChooseFiles={() => fileInputRef.current?.click()}

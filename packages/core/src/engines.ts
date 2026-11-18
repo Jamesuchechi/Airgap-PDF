@@ -35,12 +35,23 @@ export interface SavePdfOptions {
   };
 }
 
+export interface ImagePageOptions {
+  pageSize: 'fit' | 'a4' | 'letter';
+  orientation: 'auto' | 'portrait' | 'landscape';
+  marginPt: number;
+}
+
 export interface PdfDoc {
   readonly pageCount: number;
   resolveRange(expr: string): number[];
   page(index: number): PdfPage;
   copyPagesFrom(src: PdfDoc, indices: number[], at?: number): Promise<void>;
   insertBlankPage(atIndex: number, size?: [number, number]): void;
+  addImagePage(
+    bytes: Uint8Array,
+    mime: 'image/png' | 'image/jpeg',
+    opts: ImagePageOptions,
+  ): Promise<void>;
   removePage(index: number): void;
   setMetadata(meta: Partial<PdfMetadata>): void;
   save(opts?: SavePdfOptions): Promise<Asset>;
@@ -56,6 +67,7 @@ export interface RenderedPage {
   readonly pageIndex: number;
   readonly width: number;
   readonly height: number;
+  readonly downscaled: boolean;
   readonly blob: BlobLike;
 }
 
@@ -65,7 +77,7 @@ export interface RenderEngine {
   renderPage(
     asset: Asset,
     pageIndex: number,
-    opts?: { dpi?: number; maxPixels?: number; password?: string },
+    opts?: { dpi?: number; maxPixels?: number; format?: 'png' | 'jpeg'; password?: string },
   ): Promise<RenderedPage>;
   extractText(asset: Asset, pageIndex: number, opts?: { password?: string }): Promise<string>;
 }

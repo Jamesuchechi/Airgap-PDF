@@ -6,6 +6,7 @@ export * from './engines.js';
 export * from './harness.js';
 export * from './magicBytes.js';
 export * from './pageRange.js';
+export * from './recipes.js';
 
 export type AssetId = string;
 

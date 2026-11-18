@@ -160,14 +160,14 @@ Goal: the tools everyone needs, plus the thing nobody else has.
 
 ### M3: Convert + Recipes (week 3)
 
-- [ ] **(M)** Images → PDF: page size options (fit, A4, Letter), margins, orientation, per-image reorder. Formats per S10.
-- [ ] **(M)** PDF → images: DPI, format, page range; zip export; progress.
-- [ ] **(S)** Enforce canvas size limits; downscale automatically with a notice (iOS Safari pixel cap).
-- [ ] **(M)** PDF → text / Markdown for text-layer PDFs, with reading-order heuristics and a "this looks scanned, try OCR" hint.
-- [ ] **(L)** **Recipes v1**: schema `v1`, validation against tool schemas, runner that chains outputs to inputs, UI builder (add/reorder/remove steps, per-step options), save/load JSON, URL-fragment sharing (`deflate` + base64url).
+- [x] **(M)** Images → PDF: page size options (fit, A4, Letter), margins, orientation, per-image reorder. Formats per S10.
+- [x] **(M)** PDF → images: DPI, format, page range; zip export; progress.
+- [x] **(S)** Enforce canvas size limits; downscale automatically with a notice (iOS Safari pixel cap).
+- [x] **(M)** PDF → text / Markdown for text-layer PDFs, with reading-order heuristics and a "this looks scanned, try OCR" hint.
+- [x] **(L)** **Recipes v1**: schema `v1`, validation against tool schemas, runner that chains outputs to inputs, UI builder (add/reorder/remove steps, per-step options), save/load JSON, URL-fragment sharing (`deflate` + base64url).
   *Done when:* a shared link recreates the identical recipe, and the same JSON runs unchanged in the CLI later.
-- [ ] **(S)** Recipe versioning + migrations scaffold.
-- [ ] **(S)** A "recipe gallery" of 5-10 useful presets shipped in-repo.
+- [x] **(S)** Recipe versioning + migrations scaffold.
+- [x] **(S)** A "recipe gallery" of 5-10 useful presets shipped in-repo.
 
 ---
 

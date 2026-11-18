@@ -1,6 +1,7 @@
 import {
   AirgapError,
   type Asset,
+  type ImagePageOptions,
   type PdfDoc,
   type PdfEngine,
   type PdfMetadata,
@@ -62,6 +63,47 @@ class CantooPdfDoc implements PdfDoc {
 
   insertBlankPage(atIndex: number, size: [number, number] = [595.28, 841.89]): void {
     this.doc.insertPage(atIndex, size);
+  }
+
+  async addImagePage(
+    bytes: Uint8Array,
+    mime: 'image/png' | 'image/jpeg',
+    opts: ImagePageOptions,
+  ): Promise<void> {
+    const img =
+      mime === 'image/png' ? await this.doc.embedPng(bytes) : await this.doc.embedJpg(bytes);
+    const { width: iw, height: ih } = img;
+    let pw = iw;
+    let ph = ih;
+
+    if (opts.pageSize === 'a4') {
+      pw = 595.28;
+      ph = 841.89;
+    } else if (opts.pageSize === 'letter') {
+      pw = 612;
+      ph = 792;
+    }
+
+    const wantLandscape =
+      opts.orientation === 'landscape' || (opts.orientation === 'auto' && iw > ih);
+    if (opts.pageSize !== 'fit' && wantLandscape && pw < ph) {
+      [pw, ph] = [ph, pw];
+    } else if (opts.pageSize !== 'fit' && opts.orientation === 'portrait' && pw > ph) {
+      [pw, ph] = [ph, pw];
+    }
+
+    const page = this.doc.addPage([pw, ph]);
+    const availW = Math.max(1, pw - opts.marginPt * 2);
+    const availH = Math.max(1, ph - opts.marginPt * 2);
+    const scale = opts.pageSize === 'fit' ? 1 : Math.min(availW / iw, availH / ih);
+    const dw = iw * scale;
+    const dh = ih * scale;
+    page.drawImage(img, {
+      x: (pw - dw) / 2,
+      y: (ph - dh) / 2,
+      width: dw,
+      height: dh,
+    });
   }
 
   removePage(index: number): void {

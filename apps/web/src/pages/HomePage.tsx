@@ -33,7 +33,7 @@ const EVERYTHING_ELSE = [
   { id: 'split', label: 'Split', route: '#/workbench' },
   { id: 'organize', label: 'Organize', route: '#/workbench' },
   { id: 'compress', label: 'Compress', route: '#/workbench' },
-  { id: 'recipes', label: 'Recipes', route: '#/workbench' },
+  { id: 'recipes', label: 'Recipes', route: '#/recipe' },
 ] as const;
 
 export function HomePage({

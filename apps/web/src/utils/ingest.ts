@@ -2,17 +2,19 @@ import { AirgapError, type Asset, sanitizeFilename, sniffMime } from '@airgap-pd
 import { PDFDocument, rgb, StandardFonts } from '@cantoo/pdf-lib';
 import { zipSync } from 'fflate';
 
+const SUPPORTED_MIMES = new Set(['application/pdf', 'image/png', 'image/jpeg', 'image/webp']);
+
 export async function ingestFiles(files: FileList | File[]): Promise<Asset[]> {
   const list = Array.from(files);
   const assets: Asset[] = [];
 
   for (const file of list) {
     const mime = await sniffMime(file);
-    if (mime !== 'application/pdf') {
+    if (!SUPPORTED_MIMES.has(mime)) {
       throw new AirgapError(
         'UnsupportedFeature',
         `Unsupported file type: ${mime} (${file.name})`,
-        `"${file.name}" is not a valid PDF (detected ${mime} from file header).`,
+        `"${file.name}" is not a supported PDF or image (detected ${mime} from file header).`,
       );
     }
     const { name, stem } = sanitizeFilename(file.name);

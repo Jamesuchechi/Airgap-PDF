@@ -47,6 +47,12 @@ function getDefaultOptions(toolId: string): Record<string, unknown> {
       return { afterPage: 1, count: 1 };
     case 'interleave':
       return { reverseSecond: false };
+    case 'images-to-pdf':
+      return { pageSize: 'a4', orientation: 'auto', marginPt: 36 };
+    case 'pdf-to-images':
+      return { dpi: 150, format: 'png', pages: 'all' };
+    case 'pdf-to-text':
+      return { format: 'markdown', pages: 'all' };
     default:
       return {};
   }

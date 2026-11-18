@@ -64,7 +64,7 @@ export const pdfjsRenderEngine: RenderEngine = {
   async renderPage(
     asset: Asset,
     pageIndex: number,
-    opts?: { dpi?: number; maxPixels?: number; password?: string },
+    opts?: { dpi?: number; maxPixels?: number; format?: 'png' | 'jpeg'; password?: string },
   ): Promise<RenderedPage> {
     ensurePdfjsWorker();
     const data = new Uint8Array(await asset.blob.arrayBuffer());
@@ -85,7 +85,9 @@ export const pdfjsRenderEngine: RenderEngine = {
       let viewport = page.getViewport({ scale });
       const maxPixels = opts?.maxPixels ?? DEFAULT_LIMITS.maxCanvasPixels;
       const pixels = viewport.width * viewport.height;
+      let downscaled = false;
       if (pixels > maxPixels) {
+        downscaled = true;
         scale *= Math.sqrt(maxPixels / pixels);
         viewport = page.getViewport({ scale });
       }
@@ -104,13 +106,18 @@ export const pdfjsRenderEngine: RenderEngine = {
         );
       }
       await page.render({ canvasContext: ctx, viewport, canvas }).promise;
+      const mimeType = opts?.format === 'jpeg' ? 'image/jpeg' : 'image/png';
       const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/png');
+        canvas.toBlob(
+          (b) => (b ? resolve(b) : reject(new Error('toBlob failed'))),
+          mimeType,
+          opts?.format === 'jpeg' ? 0.9 : undefined,
+        );
       });
       // Release Safari canvas backing memory eagerly
       canvas.width = 1;
       canvas.height = 1;
-      return { pageIndex, width, height, blob };
+      return { pageIndex, width, height, downscaled, blob };
     } finally {
       await task.destroy();
     }
