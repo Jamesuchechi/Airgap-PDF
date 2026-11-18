@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Airgap — Workbench</title><script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script></head><body><x-dc><helmet><style>
+/* Self-hosted fonts in production (@fontsource / public/fonts/) — no external Google Fonts under font-src 'self' */
+body{margin:0;background:#0C0E0D}*{box-sizing:border-box}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid #6BFFB0;outline-offset:2px}
+.r{width:100%;min-height:860px;background:#0C0E0D;color:#E9EEEA;font:15px/1.5 Inter,system-ui,-apple-system,sans-serif;display:flex;flex-direction:column}
+.m{font:500 11px "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;letter-spacing:.08em;text-transform:uppercase;color:#98A39D}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 40px;border-bottom:1px solid #252B28}
+.br{display:flex;align-items:center;gap:12px;font:26px "Instrument Serif",Georgia,serif}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;min-height:40px;border:1px solid #2E5A44;border-radius:99px;color:#6BFFB0;background:#0F1F18;font:500 12px "JetBrains Mono",ui-monospace,monospace}
+.dot{width:8px;height:8px;border-radius:50%;background:#6BFFB0;flex-shrink:0}
+.btn{background:#6BFFB0;color:#06140D;border:0;border-radius:10px;padding:13px 22px;font:600 15px Inter,system-ui,sans-serif;min-height:44px}
+.btn2{background:none;color:#E9EEEA;border:1px solid #3A4440;border-radius:10px;padding:10px 16px;font:600 14px Inter,system-ui,sans-serif;min-height:44px}
+.ghost{background:none;border:0;color:#E9EEEA;padding:8px 10px;min-height:44px;border-radius:8px;text-align:left;display:flex;align-items:center;justify-content:space-between}
+.ghost:hover{background:#141816}
+.pn{background:#141816;border:1px solid #252B28;border-radius:14px}
+.p{width:148px;height:192px;background:#F3F0E8;border-radius:4px;padding:16px 14px;display:flex;flex-direction:column;gap:8px}
+.p i{display:block;height:5px;background:#C9C4B8;border-radius:3px}.p i:nth-child(3n){width:72%}.p i:nth-child(4){width:90%}
+.recipe{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 40px;border-bottom:1px solid #252B28;font:500 12px "JetBrains Mono",ui-monospace,monospace}
+.wb{display:flex;flex:1;min-width:0}
+.side{width:210px;border-right:1px solid #252B28;padding:16px;display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+.canvas{flex:1;padding:28px 36px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.opts{width:290px;margin:24px 40px 24px 0;padding:22px;display:flex;flex-direction:column;gap:16px;align-self:flex-start;flex-shrink:0}
+.jobbar{border-top:1px solid #252B28;padding:12px 40px;display:flex;align-items:center;flex-wrap:wrap;gap:14px;font:500 12px "JetBrains Mono",ui-monospace,monospace}
+.kbar{display:flex;gap:6px;margin-top:6px}
+.kbtn{background:#141816;border:1px solid #252B28;color:#E9EEEA;border-radius:6px;min-width:36px;min-height:36px;padding:4px 8px;font:500 12px "JetBrains Mono",monospace}
+@media(max-width:960px){
+  .wb{flex-direction:column}
+  .side{width:100%;border-right:0;border-bottom:1px solid #252B28;flex-direction:row;flex-wrap:wrap;gap:6px;padding:12px 16px}
+  .side .m{width:100%}
+  .opts{width:calc(100% - 32px);margin:0 16px 24px}
+  .canvas{padding:20px 16px}
+  .bar,.recipe,.jobbar{padding:12px 16px}
+}
+</style></helmet>
+<div class="r">
+  <header class="bar">
+    <div class="br"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#6BFFB0" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20.5 6.5A10 10 0 1 0 24 14"></path></svg> Airgap</div>
+    <button type="button" class="pill" aria-label="Open Trust panel"><span class="dot" aria-hidden="true"></span>0 OBSERVED REQUESTS · CSP ACTIVE · OFFLINE READY</button>
+  </header>
+  <div class="recipe" aria-label="Active recipe">
+    <span class="m">Recipe</span>
+    <span class="pn" style="padding:6px 12px">Merge</span><span aria-hidden="true">→</span>
+    <span class="pn" style="padding:6px 12px">Sanitize</span><span aria-hidden="true">→</span>
+    <span class="pn" style="padding:6px 12px">Watermark</span><span aria-hidden="true">→</span>
+    <span class="pn" style="padding:6px 12px;border-color:#2E5A44;color:#6BFFB0">Compress · running</span>
+    <button type="button" class="btn2" style="margin-left:auto;min-height:36px;padding:6px 12px;font-size:12px">Share as link ↗</button>
+  </div>
+  <div class="wb">
+    <nav class="side" aria-label="Tools">
+      <span class="m" style="padding:4px 10px">Organize</span>
+      <button type="button" class="ghost" aria-current="page" style="color:#6BFFB0;font-weight:600">Merge</button>
+      <button type="button" class="ghost">Split</button>
+      <button type="button" class="ghost">Reorder</button>
+      <button type="button" class="ghost">Rotate</button>
+      <span class="m" style="padding:10px 10px 4px">Protect</span>
+      <button type="button" class="ghost">Redact</button>
+      <button type="button" class="ghost">Sanitize</button>
+      <button type="button" class="ghost">X-Ray</button>
+    </nav>
+    <main class="canvas">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <h1 style="margin:0;font:400 32px 'Instrument Serif',Georgia,serif">contract-final.pdf <span class="m">+ 2 files · 24 pages</span></h1>
+        <div style="display:flex;gap:8px">
+          <button type="button" class="btn2">Undo</button>
+          <button type="button" class="btn2" disabled aria-disabled="true" style="opacity:.45">Redo</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:22px" role="list" aria-label="Document pages (use arrow buttons to reorder)">
+        <div role="listitem"><div class="p"><i></i><i></i><i></i><i></i><i></i></div><div class="m" style="padding-top:6px">01</div></div>
+        <div role="listitem">
+          <div class="p" style="outline:2px solid #6BFFB0;outline-offset:4px"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="m" style="padding-top:6px;color:#6BFFB0">02 · selected</div>
+          <div class="kbar"><button type="button" class="kbtn" aria-label="Move page 2 left">←</button><button type="button" class="kbtn" aria-label="Move page 2 right">→</button><button type="button" class="kbtn" aria-label="Rotate page 2">↻</button></div>
+        </div>
+        <div role="listitem"><div class="p" style="transform:rotate(-4deg) translateY(-8px);box-shadow:0 18px 40px #000A"><i></i><i></i><i></i><i></i></div><div class="m" style="padding-top:6px">03 · dragging</div></div>
+        <div role="listitem"><div class="p"><i></i><i></i><i></i><i></i><i></i></div><div class="m" style="padding-top:6px">04</div></div>
+        <div role="listitem"><div class="p"><i></i><i></i><i></i></div><div class="m" style="padding-top:6px">05</div></div>
+        <div role="listitem"><div class="p"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="m" style="padding-top:6px">06</div></div>
+      </div>
+    </main>
+    <aside class="pn opts" aria-label="Tool options">
+      <h2 style="margin:0;font:400 28px 'Instrument Serif',Georgia,serif">Merge</h2>
+      <div class="m">Order</div>
+      <div style="display:grid;gap:8px;font-size:14px">
+        <div style="display:flex;justify-content:space-between"><span>contract-final.pdf</span><span class="m">12p</span></div>
+        <div style="display:flex;justify-content:space-between"><span>annex-a.pdf</span><span class="m">8p</span></div>
+        <div style="display:flex;justify-content:space-between"><span>signature-page.pdf</span><span class="m">4p</span></div>
+      </div>
+      <label style="display:flex;gap:10px;align-items:center;font-size:14px;min-height:44px"><input type="checkbox" checked="">Keep bookmarks</label>
+      <button type="button" class="btn">Run merge</button>
+    </aside>
+  </div>
+  <footer class="jobbar" aria-live="polite">
+    <span style="color:#6BFFB0">● worker 2/3</span>
+    <div style="flex:1;min-width:120px;height:6px;background:#252B28;border-radius:3px" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"><div style="width:68%;height:6px;background:#6BFFB0;border-radius:3px"></div></div>
+    <span>68%</span>
+    <button type="button" class="btn2" style="padding:6px 14px">Cancel</button>
+    <span style="color:#98A39D">observed: 0 requests</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":860}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script></body></html>

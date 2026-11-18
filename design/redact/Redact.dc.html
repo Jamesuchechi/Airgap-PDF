@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Airgap — Redact &amp; Verify</title><script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script></head><body><x-dc><helmet><style>
+/* Self-hosted fonts in production (@fontsource / public/fonts/) — no external Google Fonts under font-src 'self' */
+body{margin:0;background:#0C0E0D}*{box-sizing:border-box}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid #6BFFB0;outline-offset:2px}
+.r{width:100%;min-height:860px;background:#0C0E0D;color:#E9EEEA;font:15px/1.5 Inter,system-ui,-apple-system,sans-serif;display:flex;flex-direction:column}
+.m{font:500 11px "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;letter-spacing:.08em;text-transform:uppercase;color:#98A39D}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 40px;border-bottom:1px solid #252B28}
+.br{display:flex;align-items:center;gap:12px;font:26px "Instrument Serif",Georgia,serif}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;min-height:40px;border:1px solid #2E5A44;border-radius:99px;color:#6BFFB0;background:#0F1F18;font:500 12px "JetBrains Mono",ui-monospace,monospace}
+.dot{width:8px;height:8px;border-radius:50%;background:#6BFFB0;flex-shrink:0}
+.btn{background:#6BFFB0;color:#06140D;border:0;border-radius:10px;padding:13px 22px;font:600 15px Inter,system-ui,sans-serif;min-height:44px}
+.btn2{background:none;color:#E9EEEA;border:1px solid #3A4440;border-radius:10px;padding:13px 22px;font:600 15px Inter,system-ui,sans-serif;min-height:44px}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.pn{background:#141816;border:1px solid #252B28;border-radius:14px}
+.seg{display:inline-flex;gap:4px;background:#141816;border:1px solid #252B28;border-radius:8px;padding:3px}
+.seg button{border:0;background:none;color:#98A39D;padding:6px 12px;min-height:36px;border-radius:6px;font:500 11px "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.06em}
+.seg button[aria-checked="true"]{background:#0F1F18;color:#6BFFB0;border:1px solid #2E5A44}
+.layout{display:flex;gap:40px;padding:36px 40px;flex:1;align-items:flex-start}
+.stage{flex:1;display:flex;flex-direction:column;gap:16px;align-items:center;min-width:0}
+.sheet{width:100%;max-width:560px;min-height:600px;background:#F3F0E8;color:#16181A;border-radius:4px;padding:48px;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px #000A}
+.verify{width:380px;display:flex;flex-direction:column;gap:14px;flex-shrink:0}
+@media(max-width:960px){
+  .layout{flex-direction:column;padding:24px 16px;gap:28px}
+  .verify{width:100%}
+  .sheet{padding:28px 20px;min-height:440px}
+  .bar{padding:12px 16px}
+}
+</style></helmet>
+<div class="r">
+  <header class="bar">
+    <div class="br"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#6BFFB0" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20.5 6.5A10 10 0 1 0 24 14"></path></svg> Airgap</div>
+    <button type="button" class="pill" aria-label="Open Trust panel"><span class="dot" aria-hidden="true"></span>0 OBSERVED REQUESTS · CSP ACTIVE · OFFLINE READY</button>
+  </header>
+  <main class="layout">
+    <section class="stage" aria-label="Document redaction preview">
+      <div class="m" style="align-self:stretch;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <span>Page 3 of 12</span>
+        <div class="seg" role="radiogroup" aria-label="Redaction mode">
+          <button type="button" role="radio" aria-checked="true">Safe (rasterize)</button>
+          <button type="button" role="radio" aria-checked="false">Precise</button>
+        </div>
+      </div>
+      <div class="sheet">
+        <div style="font:34px 'Instrument Serif',Georgia,serif">Settlement Agreement</div>
+        <div style="height:7px;background:#C9C4B8;border-radius:3px"></div>
+        <div style="height:7px;background:#C9C4B8;width:92%;border-radius:3px"></div>
+        <div style="display:flex;gap:8px;align-items:center"><div style="height:7px;background:#C9C4B8;width:30%;border-radius:3px"></div><div style="height:18px;background:#0A0A0A;width:34%" aria-label="Burned-in redaction"></div><div style="height:7px;background:#C9C4B8;flex:1;border-radius:3px"></div></div>
+        <div style="height:7px;background:#C9C4B8;width:80%;border-radius:3px"></div>
+        <div style="display:flex;gap:8px;align-items:center"><div style="height:7px;background:#C9C4B8;width:20%;border-radius:3px"></div><div style="height:22px;width:38%;border:2px dashed #9A4E0A;background:#D9822B22"></div><span class="m" style="color:#7A3E08">pending</span></div>
+        <div style="height:7px;background:#C9C4B8;width:88%;border-radius:3px"></div>
+        <div style="height:7px;background:#C9C4B8;width:64%;border-radius:3px"></div>
+        <div style="height:7px;background:#C9C4B8;width:90%;border-radius:3px"></div>
+      </div>
+    </section>
+    <aside class="verify" aria-label="Post-redaction verification">
+      <h1 style="margin:0;font:400 34px 'Instrument Serif',Georgia,serif">Verification</h1>
+      <span style="color:#98A39D;font-size:14px">Extracted text diff, streams, Form XObjects, structure tags, metadata and pixels are checked before download is unlocked.</span>
+      <div class="pn" style="padding:6px 20px;font:500 13px 'JetBrains Mono',ui-monospace,monospace">
+        <div style="display:flex;justify-content:space-between;padding:12px 0"><span>Text diff &amp; page text</span><span style="color:#6BFFB0">0 leaks</span></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #252B28"><span>Streams &amp; Form XObjects</span><span style="color:#6BFFB0">0 hits</span></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #252B28"><span>Tags, annotations, forms</span><span style="color:#6BFFB0">0 hits</span></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #252B28"><span>Metadata &amp; /PieceInfo</span><span style="color:#6BFFB0">0 hits</span></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #252B28"><span>Pixels under boxes</span><span style="color:#6BFFB0">uniform</span></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #252B28;color:#FFB454"><span>Earlier revision</span><span>1 hit · page 3</span></div>
+      </div>
+      <div role="alert" style="border:1px solid #6B4A1A;background:#201808;border-radius:12px;padding:16px;font-size:14px;color:#FFD9A0">Download is blocked. An older revision inside this file still contains the text.</div>
+      <button type="button" class="btn">Rebuild without history</button>
+      <button type="button" class="btn2" disabled aria-disabled="true">Download verified copy (blocked)</button>
+      <p style="margin:4px 0 0;color:#98A39D;font-size:12px">Safe mode rasterizes affected pages and rebuilds the PDF cleanly. Always visually inspect the output before sharing.</p>
+    </aside>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":860}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script></body></html>

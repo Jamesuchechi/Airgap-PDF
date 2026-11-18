@@ -1,0 +1,94 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Airgap</title><script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script></head><body><x-dc><helmet><style>
+/* Self-hosted fonts in production (@fontsource / public/fonts/) — no external Google Fonts under font-src 'self' */
+body{margin:0;background:#0C0E0D}*{box-sizing:border-box}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid #6BFFB0;outline-offset:2px}
+.r{width:100%;min-height:860px;background:#0C0E0D;color:#E9EEEA;font:15px/1.5 Inter,system-ui,-apple-system,sans-serif;display:flex;flex-direction:column}
+.m{font:500 11px "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;letter-spacing:.08em;text-transform:uppercase;color:#98A39D}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 40px;border-bottom:1px solid #252B28}
+.br{display:flex;align-items:center;gap:12px;font:26px "Instrument Serif",Georgia,serif}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;min-height:40px;border:1px solid #2E5A44;border-radius:99px;color:#6BFFB0;background:#0F1F18;font:500 12px "JetBrains Mono",ui-monospace,monospace}
+.dot{width:8px;height:8px;border-radius:50%;background:#6BFFB0;flex-shrink:0}
+.btn{background:#6BFFB0;color:#06140D;border:0;border-radius:10px;padding:13px 22px;font:600 15px Inter,system-ui,sans-serif;min-height:44px}
+.btn2{background:none;color:#E9EEEA;border:1px solid #3A4440;border-radius:10px;padding:13px 22px;font:600 15px Inter,system-ui,sans-serif;min-height:44px}
+.pn{background:#141816;border:1px solid #252B28;border-radius:14px}
+.p{width:148px;height:192px;background:#F3F0E8;border-radius:4px;padding:16px 14px;display:flex;flex-direction:column;gap:8px}
+.p i{display:block;height:5px;background:#C9C4B8;border-radius:3px}.p i:nth-child(3n){width:72%}.p i:nth-child(4){width:90%}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;padding:56px 40px 40px;max-width:1280px;margin:0 auto;width:100%}
+.hero h1{margin:0;font:400 clamp(2.4rem,6vw,5.25rem)/0.98 "Instrument Serif",Georgia,serif}
+.dropzone{border:1.5px dashed #2E5A44;background:#0F1F18;border-radius:12px;padding:16px 18px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.sec{max-width:1280px;margin:0 auto;width:100%;padding:0 40px 56px;display:flex;flex-direction:column;gap:14px}
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr;gap:32px;padding:36px 24px 28px}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .g6{grid-template-columns:repeat(3,1fr)}
+  .bar{padding:14px 24px}
+  .sec{padding:0 24px 40px}
+}
+@media(max-width:560px){
+  .g4{grid-template-columns:1fr}
+  .g6{grid-template-columns:repeat(2,1fr)}
+  .bar{padding:12px 16px}
+  .hero{padding:24px 16px}
+  .sec{padding:0 16px 32px}
+}
+</style></helmet>
+<div class="r">
+  <header class="bar">
+    <div class="br"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#6BFFB0" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20.5 6.5A10 10 0 1 0 24 14"></path></svg> Airgap</div>
+    <button type="button" class="pill" aria-label="Open Trust panel"><span class="dot" aria-hidden="true"></span>0 OBSERVED REQUESTS · CSP ACTIVE · OFFLINE READY</button>
+  </header>
+  <main>
+    <div class="hero">
+      <div style="display:flex;flex-direction:column;gap:22px;justify-content:center">
+        <div class="m" style="color:#6BFFB0">The sealed PDF workbench</div>
+        <h1>Your PDF never leaves the room.</h1>
+        <p style="margin:0;max-width:480px;color:#B4BEB8;font-size:17px">Merge, redact, sign and compress entirely on this device. No upload, no account. Switch off Wi-Fi and keep working.</p>
+        <div class="dropzone" role="region" aria-label="Drop PDF files here">
+          <button type="button" class="btn">Choose PDFs</button>
+          <button type="button" class="btn2">Try sample PDF</button>
+          <button type="button" class="btn2">Prove it in 30s</button>
+          <span class="m" style="color:#98A39D">or drop PDFs anywhere</span>
+        </div>
+      </div>
+      <div class="pn" style="padding:28px;display:flex;flex-direction:column;gap:22px">
+        <div style="display:grid;grid-template-columns:1fr 64px 1fr;align-items:center;gap:0">
+          <div style="border:1.5px solid #6BFFB0;border-radius:12px;padding:18px;display:flex;gap:10px;flex-direction:column;align-items:center"><span class="m" style="color:#6BFFB0">This device</span><div style="display:flex;gap:8px"><div class="p" style="width:64px;height:84px;padding:8px;gap:5px"><i></i><i></i><i></i></div><div class="p" style="width:64px;height:84px;padding:8px;gap:5px;transform:rotate(5deg)"><i></i><i></i><i></i></div></div></div>
+          <div style="text-align:center;color:#FFB454;font:500 11px 'JetBrains Mono',ui-monospace,monospace">// // //<br>NO<br>ROUTE</div>
+          <div style="border:1.5px dashed #3A4440;border-radius:12px;padding:18px;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:center"><span class="m">The internet</span><span style="color:#8E9B94;font-size:13px;margin-top:6px">never sees a byte</span></div>
+        </div>
+        <div style="display:grid;gap:0;font:500 13px 'JetBrains Mono',ui-monospace,monospace">
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid #252B28"><span class="m">Observed requests</span><span style="color:#6BFFB0">0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid #252B28"><span class="m">Policy</span><span>connect-src 'self'</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid #252B28"><span class="m">Build</span><span style="color:#6BFFB0">4f2a9c1 · @airgap-pdf/verify</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="m">Only here</div>
+      <div class="g4">
+        <button type="button" style="text-align:left;color:#E9EEEA;background:#0F1F18;border:1px solid #2E5A44;border-radius:12px;padding:18px;min-height:96px"><b style="font-size:17px">Redact, verified</b><br><span style="color:#98A39D;font-size:13px">Removes text, then proves it.</span></button>
+        <button type="button" style="text-align:left;color:#E9EEEA;background:#0F1F18;border:1px solid #2E5A44;border-radius:12px;padding:18px;min-height:96px"><b style="font-size:17px">X-Ray</b><br><span style="color:#98A39D;font-size:13px">What is this file leaking?</span></button>
+        <button type="button" style="text-align:left;color:#E9EEEA;background:#0F1F18;border:1px solid #2E5A44;border-radius:12px;padding:18px;min-height:96px"><b style="font-size:17px">Time Machine</b><br><span style="color:#98A39D;font-size:13px">Recover hidden revisions.</span></button>
+        <button type="button" style="text-align:left;color:#E9EEEA;background:#0F1F18;border:1px solid #2E5A44;border-radius:12px;padding:18px;min-height:96px"><b style="font-size:17px">Compare</b><br><span style="color:#98A39D;font-size:13px">Text and pixel diff.</span></button>
+      </div>
+      <div class="m" style="margin-top:10px">Everything else</div>
+      <div class="g6">
+        <button type="button" class="pn" style="color:#E9EEEA;font:600 14px Inter,sans-serif;padding:16px;min-height:56px;text-align:left">Merge</button>
+        <button type="button" class="pn" style="color:#E9EEEA;font:600 14px Inter,sans-serif;padding:16px;min-height:56px;text-align:left">Split</button>
+        <button type="button" class="pn" style="color:#E9EEEA;font:600 14px Inter,sans-serif;padding:16px;min-height:56px;text-align:left">Organize</button>
+        <button type="button" class="pn" style="color:#E9EEEA;font:600 14px Inter,sans-serif;padding:16px;min-height:56px;text-align:left">Sign</button>
+        <button type="button" class="pn" style="color:#E9EEEA;font:600 14px Inter,sans-serif;padding:16px;min-height:56px;text-align:left">Compress</button>
+        <button type="button" class="pn" style="color:#E9EEEA;font:600 14px Inter,sans-serif;padding:16px;min-height:56px;text-align:left">Recipes</button>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":860}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script></body></html>
