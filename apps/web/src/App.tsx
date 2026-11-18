@@ -56,6 +56,7 @@ export function App() {
   const [activeToolId, setActiveToolId] = useState('rotate');
   const [toast, setToast] = useState<string | null>(null);
   const [toastDetails, setToastDetails] = useState<string[]>([]);
+  const [toastKind, setToastKind] = useState<'success' | 'error'>('success');
   const [thumbnails, setThumbnails] = useState<string[]>([]);
   const [locale, setLocale] = useState<Locale>('en');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -251,15 +252,18 @@ export function App() {
       if (result.ok) {
         pushResult(result.outputs);
         setActiveJob(null);
+        setToastKind('success');
         setToast(result.summary ?? `${toolId} finished (${result.outputs.length} output).`);
         setToastDetails(result.details ?? []);
       } else {
         setActiveJob(null);
+        setToastKind('error');
         setToast(result.error.userMessage);
         setToastDetails([]);
       }
     } catch (err) {
       setActiveJob(null);
+      setToastKind('error');
       setToast(err instanceof Error ? err.message : 'Tool execution failed.');
       setToastDetails([]);
     }
@@ -273,6 +277,7 @@ export function App() {
           onNavigate={navigate}
           onHome={() => navigate('#/')}
           onOpenTrust={() => setTrustOpen(true)}
+          onOpenPalette={() => setPaletteOpen(true)}
           swReady={swStatus.startsWith('ready')}
           locale={locale}
           onChangeLocale={setLocale}
@@ -311,15 +316,51 @@ export function App() {
       )}
 
       {toast && (
-        <div role="status" className="alert" style={{ margin: '12px 40px 0' }}>
-          <div>{toast}</div>
-          {toastDetails.length > 0 && (
-            <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 12 }}>
-              {toastDetails.map((d) => (
-                <li key={d}>{d}</li>
-              ))}
-            </ul>
-          )}
+        <div
+          role="status"
+          className={toastKind === 'success' ? 'toast-success' : 'alert'}
+          style={{
+            margin: '12px 40px 0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: 12,
+          }}
+        >
+          <div>
+            <div>{toast}</div>
+            {toastDetails.length > 0 && (
+              <ul style={{ margin: '6px 0 0', paddingLeft: 18, fontSize: 12 }}>
+                {toastDetails.map((d) => (
+                  <li key={d}>{d}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+            {toastKind === 'success' && primaryAsset && (
+              <button
+                type="button"
+                className="btn2"
+                style={{ padding: '4px 10px', fontSize: 12 }}
+                onClick={() => downloadAsset(primaryAsset)}
+              >
+                Save PDF
+              </button>
+            )}
+            <button
+              type="button"
+              className="btn2"
+              aria-label="Dismiss notification"
+              style={{ padding: '4px 8px', fontSize: 12 }}
+              onClick={() => {
+                setToast(null);
+                setToastDetails([]);
+              }}
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
 
@@ -401,6 +442,10 @@ export function App() {
           onNavigate={(target) => {
             if (target === '#/workbench') setActiveToolId('rotate');
             navigate(target);
+          }}
+          onSelectTool={(toolId) => {
+            setActiveToolId(toolId);
+            navigate('#/workbench');
           }}
         />
       )}

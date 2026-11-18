@@ -133,7 +133,10 @@ export function WorkbenchPage({
   onNavigate,
 }: WorkbenchPageProps) {
   const [selectedPage, setSelectedPage] = useState<number>(0);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth <= 960,
+  );
+  const [toolFilter, setToolFilter] = useState('');
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
     views: true,
     organize: true,
@@ -294,13 +297,13 @@ export function WorkbenchPage({
 
       <div className="wb">
         {sidebarCollapsed ? (
-          <div style={{ borderRight: '1px solid var(--border)', padding: '12px 6px' }}>
+          <div style={{ borderRight: '1px solid var(--border)', padding: '10px 12px' }}>
             <button
               type="button"
               className="btn2"
               aria-label="Expand tools sidebar"
               onClick={() => setSidebarCollapsed(false)}
-              style={{ padding: '6px 8px', fontSize: 12 }}
+              style={{ padding: '6px 10px', fontSize: 12, whiteSpace: 'nowrap' }}
             >
               Tools ▸
             </button>
@@ -328,6 +331,15 @@ export function WorkbenchPage({
                 ◂ Hide
               </button>
             </div>
+            <input
+              type="search"
+              className="text-input"
+              placeholder="Filter tools..."
+              aria-label="Filter tools"
+              value={toolFilter}
+              onChange={(e) => setToolFilter(e.target.value)}
+              style={{ padding: '5px 8px', fontSize: 12, marginBottom: 6 }}
+            />
 
             <button
               type="button"
@@ -369,13 +381,24 @@ export function WorkbenchPage({
                 { key: 'protect', label: 'Protect & Inspect' },
               ] as const
             ).map((grp) => {
-              const items = TOOLS.filter((t) => t.category === grp.key);
+              const q = toolFilter.trim().toLowerCase();
+              const items = TOOLS.filter(
+                (t) =>
+                  t.category === grp.key &&
+                  (q.length === 0 ||
+                    t.name.toLowerCase().includes(q) ||
+                    t.summary.toLowerCase().includes(q)),
+              );
+              const showTimeMachine =
+                grp.key === 'protect' && (q.length === 0 || 'time machine'.includes(q));
+              if (items.length === 0 && !showTimeMachine) return null;
+              const isExpanded = q.length > 0 || openGroups[grp.key];
               return (
                 <div key={grp.key} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <button
                     type="button"
                     className="ghost mono"
-                    aria-expanded={openGroups[grp.key]}
+                    aria-expanded={isExpanded}
                     onClick={() => toggleGroup(grp.key)}
                     style={{
                       display: 'flex',
@@ -386,9 +409,9 @@ export function WorkbenchPage({
                     }}
                   >
                     <span>{grp.label}</span>
-                    <span>{openGroups[grp.key] ? '▾' : '▸'}</span>
+                    <span>{isExpanded ? '▾' : '▸'}</span>
                   </button>
-                  {openGroups[grp.key] && (
+                  {isExpanded && (
                     <>
                       {items.map((t) => (
                         <button

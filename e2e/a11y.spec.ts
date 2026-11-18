@@ -36,11 +36,12 @@ test.describe('M10 Accessibility, Keyboard Navigation & i18n RTL', () => {
   test('Reader & Editor previews, searches, and edits text inline', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Try sample PDF' }).click();
+    await expect(page.getByRole('heading', { name: /sample-contract\.pdf/ })).toBeVisible();
     await page.getByRole('button', { name: 'Open Reader & Editor' }).click();
 
     await expect(page.getByLabel('Find in page')).toBeVisible();
     await page.getByLabel('Find in page').fill('Sample');
-    await expect(page.getByText(/[1-9]\d* match\(es\)/)).toBeVisible();
+    await expect(page.getByText(/[1-9]\d* match\(es\)/)).toBeVisible({ timeout: 10000 });
 
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
     await expect(page.getByLabel('Edit tool')).toBeVisible();

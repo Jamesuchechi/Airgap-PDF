@@ -39,6 +39,7 @@ export function ReaderPage({
 }: ReaderPageProps) {
   const [mode, setMode] = useState<'preview' | 'edit'>('preview');
   const [editTool, setEditTool] = useState<'text' | 'highlight' | 'draw'>('text');
+  const [showThumbs, setShowThumbs] = useState(true);
   const [pageCount, setPageCount] = useState(1);
   const [pageIndex, setPageIndex] = useState(0);
   const [zoom, setZoom] = useState<number>(1);
@@ -415,6 +416,9 @@ export function ReaderPage({
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           {primaryAsset && (
             <>
+              <button type="button" className="btn2" onClick={() => setShowThumbs((v) => !v)}>
+                {showThumbs ? 'Hide Pages' : 'Show Pages'}
+              </button>
               <button
                 type="button"
                 className="btn2"
@@ -465,6 +469,21 @@ export function ReaderPage({
       </div>
 
       {/* Main Reader Body */}
+      {mode === 'edit' && primaryAsset && (
+        <div
+          className="mono"
+          style={{
+            padding: '6px 16px',
+            fontSize: 12,
+            background: 'var(--accent-bg)',
+            borderBottom: '1px solid var(--accent-border)',
+            color: 'var(--accent)',
+          }}
+        >
+          Edit mode: click any existing text on the page to rewrite it, or click blank space to type
+          new text. Click &ldquo;Save Edits&rdquo; when finished.
+        </div>
+      )}
       {!primaryAsset ? (
         <div
           style={{
@@ -499,59 +518,61 @@ export function ReaderPage({
       ) : (
         <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
           {/* Left Page Thumbnails Rail */}
-          <aside
-            aria-label="Page thumbnails"
-            style={{
-              width: 140,
-              overflowY: 'auto',
-              borderRight: '1px solid var(--border)',
-              padding: 10,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 10,
-            }}
-          >
-            {Array.from({ length: pageCount }, (_, k) => ({ pageNum: k + 1, idx: k })).map(
-              ({ pageNum, idx }) => {
-                const thumb = thumbnails[idx];
-                const active = idx === pageIndex;
-                return (
-                  <button
-                    key={pageNum}
-                    type="button"
-                    onClick={() => {
-                      commitDraftText();
-                      setPageIndex(idx);
-                    }}
-                    style={{
-                      padding: 4,
-                      borderRadius: 6,
-                      border: active ? '2px solid var(--accent)' : '1px solid var(--border)',
-                      background: 'transparent',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: 4,
-                    }}
-                  >
-                    {thumb ? (
-                      <img
-                        src={thumb}
-                        alt={`Page ${pageNum}`}
-                        style={{ width: '100%', borderRadius: 4, display: 'block' }}
-                      />
-                    ) : (
-                      <div style={{ height: 90, width: '100%', background: '#1a1d1b' }} />
-                    )}
-                    <span className="mono muted" style={{ fontSize: 11 }}>
-                      {pageNum}
-                    </span>
-                  </button>
-                );
-              },
-            )}
-          </aside>
+          {showThumbs && (
+            <aside
+              aria-label="Page thumbnails"
+              style={{
+                width: 140,
+                overflowY: 'auto',
+                borderRight: '1px solid var(--border)',
+                padding: 10,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
+              }}
+            >
+              {Array.from({ length: pageCount }, (_, k) => ({ pageNum: k + 1, idx: k })).map(
+                ({ pageNum, idx }) => {
+                  const thumb = thumbnails[idx];
+                  const active = idx === pageIndex;
+                  return (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      onClick={() => {
+                        commitDraftText();
+                        setPageIndex(idx);
+                      }}
+                      style={{
+                        padding: 4,
+                        borderRadius: 6,
+                        border: active ? '2px solid var(--accent)' : '1px solid var(--border)',
+                        background: 'transparent',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 4,
+                      }}
+                    >
+                      {thumb ? (
+                        <img
+                          src={thumb}
+                          alt={`Page ${pageNum}`}
+                          style={{ width: '100%', borderRadius: 4, display: 'block' }}
+                        />
+                      ) : (
+                        <div style={{ height: 90, width: '100%', background: '#1a1d1b' }} />
+                      )}
+                      <span className="mono muted" style={{ fontSize: 11 }}>
+                        {pageNum}
+                      </span>
+                    </button>
+                  );
+                },
+              )}
+            </aside>
+          )}
 
           {/* Center Scrollable Document Stage */}
           <section
