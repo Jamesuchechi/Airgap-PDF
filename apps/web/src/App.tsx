@@ -9,6 +9,7 @@ import { isRtlLocale, type Locale } from './i18n/messages.js';
 import { ComparePage } from './pages/ComparePage.js';
 import { EmbedPage } from './pages/EmbedPage.js';
 import { HomePage } from './pages/HomePage.js';
+import { ReaderPage } from './pages/ReaderPage.js';
 import { RecipesPage } from './pages/RecipesPage.js';
 import { RedactPage } from './pages/RedactPage.js';
 import { ScanPage } from './pages/ScanPage.js';
@@ -311,6 +312,22 @@ export function App() {
 
       {route.startsWith('#/embed') ? (
         <EmbedPage route={route} />
+      ) : route.startsWith('#/reader') ? (
+        <ReaderPage
+          primaryAsset={primaryAsset}
+          thumbnails={thumbnails}
+          busy={activeJob !== null}
+          onApplyEdits={(operations) => {
+            if (primaryAsset) {
+              void handleRunTool('annotate', [primaryAsset], { operations });
+            }
+          }}
+          onLoadNewAsset={(asset) => setInitialAssets([asset])}
+          onDownload={downloadAsset}
+          onChooseFiles={() => fileInputRef.current?.click()}
+          onSamplePdf={() => void handleSamplePdf()}
+          onBackToWorkbench={() => navigate('#/workbench')}
+        />
       ) : route.startsWith('#/compare') ? (
         <ComparePage assets={assets} onBackToWorkbench={() => navigate('#/workbench')} />
       ) : route.startsWith('#/scan') ? (

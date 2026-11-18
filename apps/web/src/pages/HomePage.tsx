@@ -24,15 +24,16 @@ const ONLY_HERE = [
     desc: 'Recover hidden revisions.',
     route: '#/workbench',
   },
-  { id: 'compare', title: 'Compare', desc: 'Text and pixel diff.', route: '#/workbench' },
+  { id: 'compare', title: 'Compare', desc: 'Text and pixel diff.', route: '#/compare' },
 ] as const;
 
 const EVERYTHING_ELSE = [
+  { id: 'reader', label: 'Reader & Editor', route: '#/reader' },
   { id: 'rotate', label: 'Rotate', route: '#/workbench' },
   { id: 'merge', label: 'Merge', route: '#/workbench' },
   { id: 'split', label: 'Split', route: '#/workbench' },
-  { id: 'organize', label: 'Organize', route: '#/workbench' },
   { id: 'compress', label: 'Compress', route: '#/workbench' },
+  { id: 'scan', label: 'Scanner', route: '#/scan' },
   { id: 'recipes', label: 'Recipes', route: '#/recipe' },
 ] as const;
 

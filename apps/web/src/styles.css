@@ -301,12 +301,16 @@ input:focus-visible {
 }
 
 .side {
-  width: 210px;
+  width: 224px;
+  max-height: calc(100vh - 116px);
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
   border-right: 1px solid var(--border);
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   flex-shrink: 0;
 }
 
@@ -314,10 +318,11 @@ input:focus-visible {
   background: none;
   border: 0;
   color: var(--text);
-  padding: 8px 12px;
-  min-height: 44px;
+  padding: 6px 10px;
+  min-height: 36px;
   border-radius: 8px;
   text-align: left;
+  font-size: 13px;
 }
 
 .ghost[aria-current="page"] {

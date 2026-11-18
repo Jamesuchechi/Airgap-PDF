@@ -133,6 +133,15 @@ export function WorkbenchPage({
   onNavigate,
 }: WorkbenchPageProps) {
   const [selectedPage, setSelectedPage] = useState<number>(0);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
+    views: true,
+    organize: true,
+    convert: true,
+    edit: true,
+    protect: true,
+  });
+  const toggleGroup = (key: string) => setOpenGroups((prev) => ({ ...prev, [key]: !prev[key] }));
   const [formValues, setFormValues] = useState<Record<string, unknown>>(() =>
     getDefaultOptions(activeToolId),
   );
@@ -284,43 +293,131 @@ export function WorkbenchPage({
       </section>
 
       <div className="wb">
-        <nav className="side" aria-label="Tools">
-          <span className="mono" style={{ padding: '4px 12px' }}>
-            Organize
-          </span>
-          {TOOLS.map((t) => (
+        {sidebarCollapsed ? (
+          <div style={{ borderRight: '1px solid var(--border)', padding: '12px 6px' }}>
             <button
-              key={t.id}
               type="button"
-              className="ghost"
-              aria-current={t.id === activeTool.id ? 'page' : undefined}
-              onClick={() => onSelectTool(t.id)}
+              className="btn2"
+              aria-label="Expand tools sidebar"
+              onClick={() => setSidebarCollapsed(false)}
+              style={{ padding: '6px 8px', fontSize: 12 }}
             >
-              {t.name}
+              Tools ▸
             </button>
-          ))}
+          </div>
+        ) : (
+          <nav className="side" aria-label="Tools">
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '2px 6px 6px',
+              }}
+            >
+              <span className="mono muted" style={{ fontSize: 11 }}>
+                Tools
+              </span>
+              <button
+                type="button"
+                className="ghost"
+                aria-label="Collapse tools sidebar"
+                onClick={() => setSidebarCollapsed(true)}
+                style={{ minHeight: 24, padding: '2px 6px', fontSize: 11 }}
+              >
+                ◂ Hide
+              </button>
+            </div>
 
-          <span className="mono" style={{ padding: '10px 12px 4px' }}>
-            Protect &amp; Inspect
-          </span>
-          <button
-            type="button"
-            className="ghost"
-            aria-current={activeToolId === 'time-machine' ? 'page' : undefined}
-            onClick={() => onSelectTool('time-machine')}
-          >
-            Time Machine
-          </button>
-          <button type="button" className="ghost" onClick={() => onNavigate('#/redact')}>
-            Redact &amp; Verify
-          </button>
-          <button type="button" className="ghost" onClick={() => onNavigate('#/compare')}>
-            Compare PDFs
-          </button>
-          <button type="button" className="ghost" onClick={() => onNavigate('#/scan')}>
-            Document Scanner
-          </button>
-        </nav>
+            <button
+              type="button"
+              className="ghost mono"
+              aria-expanded={openGroups.views}
+              onClick={() => toggleGroup('views')}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: 11,
+                color: 'var(--muted)',
+              }}
+            >
+              <span>Views</span>
+              <span>{openGroups.views ? '▾' : '▸'}</span>
+            </button>
+            {openGroups.views && (
+              <>
+                <button type="button" className="ghost" onClick={() => onNavigate('#/reader')}>
+                  Reader &amp; Editor
+                </button>
+                <button type="button" className="ghost" onClick={() => onNavigate('#/redact')}>
+                  Redact &amp; Verify
+                </button>
+                <button type="button" className="ghost" onClick={() => onNavigate('#/compare')}>
+                  Compare PDFs
+                </button>
+                <button type="button" className="ghost" onClick={() => onNavigate('#/scan')}>
+                  Document Scanner
+                </button>
+              </>
+            )}
+
+            {(
+              [
+                { key: 'organize', label: 'Organize' },
+                { key: 'convert', label: 'Convert' },
+                { key: 'edit', label: 'Edit & Sign' },
+                { key: 'protect', label: 'Protect & Inspect' },
+              ] as const
+            ).map((grp) => {
+              const items = TOOLS.filter((t) => t.category === grp.key);
+              return (
+                <div key={grp.key} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <button
+                    type="button"
+                    className="ghost mono"
+                    aria-expanded={openGroups[grp.key]}
+                    onClick={() => toggleGroup(grp.key)}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      fontSize: 11,
+                      color: 'var(--muted)',
+                      marginTop: 4,
+                    }}
+                  >
+                    <span>{grp.label}</span>
+                    <span>{openGroups[grp.key] ? '▾' : '▸'}</span>
+                  </button>
+                  {openGroups[grp.key] && (
+                    <>
+                      {items.map((t) => (
+                        <button
+                          key={t.id}
+                          type="button"
+                          className="ghost"
+                          aria-current={t.id === activeTool.id ? 'page' : undefined}
+                          onClick={() => onSelectTool(t.id)}
+                        >
+                          {t.name}
+                        </button>
+                      ))}
+                      {grp.key === 'protect' && (
+                        <button
+                          type="button"
+                          className="ghost"
+                          aria-current={activeToolId === 'time-machine' ? 'page' : undefined}
+                          onClick={() => onSelectTool('time-machine')}
+                        >
+                          Time Machine
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
+        )}
 
         <main className="canvas">
           <div
@@ -340,6 +437,9 @@ export function WorkbenchPage({
               </span>
             </h1>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <button type="button" className="btn2" onClick={() => onNavigate('#/reader')}>
+                Open Reader &amp; Editor
+              </button>
               <button type="button" className="btn2" disabled={!canUndo} onClick={onUndo}>
                 Undo
               </button>
