@@ -30,6 +30,27 @@ export default defineConfig({
             purpose: 'any maskable',
           },
         ],
+        file_handlers: [
+          {
+            action: './',
+            accept: {
+              'application/pdf': ['.pdf'],
+            },
+          },
+        ],
+        share_target: {
+          action: './',
+          method: 'POST',
+          enctype: 'multipart/form-data',
+          params: {
+            files: [
+              {
+                name: 'pdf',
+                accept: ['application/pdf', '.pdf'],
+              },
+            ],
+          },
+        },
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],

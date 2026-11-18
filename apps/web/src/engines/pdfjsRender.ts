@@ -152,3 +152,53 @@ export const pdfjsRenderEngine: RenderEngine = {
     }
   },
 };
+
+export interface TextRunBox {
+  text: string;
+  xPct: number;
+  yPct: number;
+  wPct: number;
+  hPct: number;
+}
+
+export async function extractPageTextRuns(
+  asset: Asset,
+  pageIndex: number,
+  opts?: { password?: string },
+): Promise<TextRunBox[]> {
+  ensurePdfjsWorker();
+  const data = new Uint8Array(await asset.blob.arrayBuffer());
+  const base = getAssetBase();
+  const task = pdfjsLib.getDocument({
+    data,
+    password: opts?.password,
+    useSystemFonts: false,
+    cMapUrl: `${base}cmaps/`,
+    cMapPacked: true,
+    standardFontDataUrl: `${base}standard_fonts/`,
+  });
+  try {
+    const doc = await task.promise;
+    const page = await doc.getPage(pageIndex + 1);
+    const viewport = page.getViewport({ scale: 1 });
+    const content = await page.getTextContent();
+    const runs: TextRunBox[] = [];
+    for (const item of content.items) {
+      if (!('str' in item) || !item.str.trim()) continue;
+      const tr = item.transform;
+      const [vx, vy] = viewport.convertToViewportPoint(tr[4] ?? 0, tr[5] ?? 0);
+      const h = Math.max(4, item.height || Math.hypot(tr[2] ?? 0, tr[3] ?? 0) || 12);
+      const w = Math.max(2, item.width || 8);
+      runs.push({
+        text: item.str,
+        xPct: Math.max(0, Math.min(1, vx / viewport.width)),
+        yPct: Math.max(0, Math.min(1, (vy - h) / viewport.height)),
+        wPct: Math.max(0.002, Math.min(1, w / viewport.width)),
+        hPct: Math.max(0.005, Math.min(1, h / viewport.height)),
+      });
+    }
+    return runs;
+  } finally {
+    await task.destroy();
+  }
+}

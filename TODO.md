@@ -221,34 +221,34 @@ Goal: the tools everyone needs, plus the thing nobody else has.
 
 This is the flagship. Do not rush it, and do not ship a half-version: a bad redaction tool is worse than none.
 
-- [ ] **(L)** Redaction UI: draw regions, search-and-redact (text, regex, presets for email/phone/IBAN/ID-like patterns), preview with "burned-in" rendering.
-- [ ] **(L)** Safe mode: rasterise affected pages at chosen DPI, replace page content.
-- [ ] **(XL → split)** Precise mode per S4: (a) content-stream tokenizer, (b) text-run geometry, (c) drop/clip operators under regions, (d) image masking, (e) fonts/ToUnicode leftovers.
-- [ ] **(L)** **Post-redaction verifier** (shared with Verify Redaction): re-extract text; scan raw decompressed streams; annotations; bookmarks; form fields; attachments; metadata; previous revisions. Fails loudly with locations.
+- [x] **(L)** Redaction UI: draw regions, search-and-redact (text, regex, presets for email/phone/IBAN/ID-like patterns), preview with "burned-in" rendering.
+- [x] **(L)** Safe mode: rasterise affected pages at chosen DPI, replace page content.
+- [x] **(XL → split)** Precise mode per S4: (a) content-stream tokenizer, (b) text-run geometry, (c) drop/clip operators under regions, (d) image masking, (e) fonts/ToUnicode leftovers.
+- [x] **(L)** **Post-redaction verifier** (shared with Verify Redaction): re-extract text; scan raw decompressed streams; annotations; bookmarks; form fields; attachments; metadata; previous revisions. Fails loudly with locations.
   *Done when:* it catches every leak in a corpus of intentionally-bad redactions in `corpus/redaction-fails/`.
-- [ ] **(M)** **Verify Redaction** page: audit any PDF, report suspicious black boxes with text underneath.
-- [ ] **(M)** Redaction log (what was removed, counts, never the content) exportable for audit.
-- [ ] **(M)** Prominent in-app explainer of Safe vs Precise.
+- [x] **(M)** **Verify Redaction** page: audit any PDF, report suspicious black boxes with text underneath.
+- [x] **(M)** Redaction log (what was removed, counts, never the content) exportable for audit.
+- [x] **(M)** Prominent in-app explainer of Safe vs Precise.
 
 ---
 
 ### M8: Compare + Scan (weeks 10-12)
 
-- [ ] **(L)** Compare: text diff (Myers) with page mapping, insert/delete/move highlighting.
-- [ ] **(L)** Visual diff: render both at the same DPI, align, `pixelmatch` overlay, tolerance slider, swipe / onion-skin / side-by-side views.
-- [ ] **(M)** Compare report export (PDF with changes highlighted).
-- [ ] **(L)** Scanner mode: `getUserMedia`, capture, edge detection, perspective correction, filters (B/W, grayscale, color), multi-page, reorder, export. Works on iOS Safari and Android Chrome.
-- [ ] **(M)** Scanner: manual corner adjustment fallback when auto-detect fails.
+- [x] **(L)** Compare: text diff (Myers) with page mapping, insert/delete/move highlighting.
+- [x] **(L)** Visual diff: render both at the same DPI, align, `pixelmatch` overlay, tolerance slider, swipe / onion-skin / side-by-side views.
+- [x] **(M)** Compare report export (PDF with changes highlighted).
+- [x] **(L)** Scanner mode: `getUserMedia`, capture, edge detection, perspective correction, filters (B/W, grayscale, color), multi-page, reorder, export. Works on iOS Safari and Android Chrome.
+- [x] **(M)** Scanner: manual corner adjustment fallback when auto-detect fails.
 
 ---
 
 ### M9: CLI, embed, integration (weeks 12-13)
 
-- [ ] **(L)** `@airgap-pdf/cli`: flags generated from zod schemas, `run recipe.json`, stdin/stdout piping, exit codes, `--json` output.
-- [ ] **(M)** Verify tools declaring `runtime: ['browser','node']` pass the same harness in Node (use `@napi-rs/canvas` for render-dependent tools).
-- [ ] **(M)** Embed routes (`#/embed/<tool>`) with a minimal chrome and optional `postMessage` API (`ready`, `result`, `error`). Document origin checks.
-- [ ] **(M)** PWA `file_handlers` (open PDFs with the app on desktop Chromium) and `share_target` (Android).
-- [ ] **(S)** Docs: CLI usage, embed guide, recipe cookbook.
+- [x] **(L)** `@airgap-pdf/cli`: flags generated from zod schemas, `run recipe.json`, stdin/stdout piping, exit codes, `--json` output.
+- [x] **(M)** Verify tools declaring `runtime: ['browser','node']` pass the same harness in Node (use `@napi-rs/canvas` for render-dependent tools).
+- [x] **(M)** Embed routes (`#/embed/<tool>`) with a minimal chrome and optional `postMessage` API (`ready`, `result`, `error`). Document origin checks.
+- [x] **(M)** PWA `file_handlers` (open PDFs with the app on desktop Chromium) and `share_target` (Android).
+- [x] **(S)** Docs: CLI usage, embed guide, recipe cookbook.
 
 ---
 

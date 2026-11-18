@@ -16,6 +16,7 @@ import { pageNumbersTool } from './page-numbers.js';
 import { pdfToImagesTool } from './pdf-to-images.js';
 import { pdfToTextTool } from './pdf-to-text.js';
 import { protectTool } from './protect.js';
+import { redactTool } from './redact.js';
 import { reorderTool } from './reorder.js';
 import { rotateTool } from './rotate.js';
 import { sanitizeTool } from './sanitize.js';
@@ -46,6 +47,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   metadataTool,
   formFillTool,
   protectTool,
+  redactTool,
   unlockTool,
   sanitizeTool,
   xrayTool,

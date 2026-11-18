@@ -314,6 +314,12 @@ export function WorkbenchPage({
           <button type="button" className="ghost" onClick={() => onNavigate('#/redact')}>
             Redact &amp; Verify
           </button>
+          <button type="button" className="ghost" onClick={() => onNavigate('#/compare')}>
+            Compare PDFs
+          </button>
+          <button type="button" className="ghost" onClick={() => onNavigate('#/scan')}>
+            Document Scanner
+          </button>
         </nav>
 
         <main className="canvas">

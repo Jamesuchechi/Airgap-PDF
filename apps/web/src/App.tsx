@@ -5,9 +5,12 @@ import { CommandPalette } from './components/CommandPalette.js';
 import { TopBar } from './components/TopBar.js';
 import { TrustModal } from './components/TrustModal.js';
 import { pdfjsRenderEngine } from './engines/pdfjsRender.js';
+import { ComparePage } from './pages/ComparePage.js';
+import { EmbedPage } from './pages/EmbedPage.js';
 import { HomePage } from './pages/HomePage.js';
 import { RecipesPage } from './pages/RecipesPage.js';
 import { RedactPage } from './pages/RedactPage.js';
+import { ScanPage } from './pages/ScanPage.js';
 import { WorkbenchPage } from './pages/WorkbenchPage.js';
 import { useWorkspaceStore } from './stores/workspaceStore.js';
 import { createSamplePdf, downloadAllAsZip, downloadAsset, ingestFiles } from './utils/ingest.js';
@@ -21,6 +24,11 @@ import { estimateMemory } from './workers/workerPool.js';
 declare global {
   interface Window {
     __airgapProbeWorkerFetch?: (url: string) => Promise<{ blocked: boolean; error?: string }>;
+    launchQueue?: {
+      setConsumer: (
+        consumer: (launchParams: { files?: Array<{ getFile: () => Promise<File> }> }) => void,
+      ) => void;
+    };
   }
 }
 
@@ -113,6 +121,16 @@ export function App() {
       delete window.__airgapProbeWorkerFetch;
     };
   }, []);
+
+  useEffect(() => {
+    if (!window.launchQueue?.setConsumer) return;
+    window.launchQueue.setConsumer((launchParams) => {
+      if (!launchParams.files?.length) return;
+      void Promise.all(launchParams.files.map((h) => h.getFile())).then((files) =>
+        handleFiles(files),
+      );
+    });
+  });
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -280,7 +298,19 @@ export function App() {
         </div>
       )}
 
-      {route.startsWith('#/recipe') ? (
+      {route.startsWith('#/embed') ? (
+        <EmbedPage route={route} />
+      ) : route.startsWith('#/compare') ? (
+        <ComparePage assets={assets} onBackToWorkbench={() => navigate('#/workbench')} />
+      ) : route.startsWith('#/scan') ? (
+        <ScanPage
+          onSendToWorkbench={(asset) => {
+            pushResult([asset]);
+            navigate('#/workbench');
+          }}
+          onBackToWorkbench={() => navigate('#/workbench')}
+        />
+      ) : route.startsWith('#/recipe') ? (
         <RecipesPage
           fragmentParam={new URLSearchParams(route.split('?')[1] ?? '').get('r')}
           assets={assets}
